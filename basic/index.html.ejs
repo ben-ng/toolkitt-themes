@@ -1,0 +1,6 @@
+<% include head.html.ejs %>
+<script type="text/javascript">
+  var user_vars = "<%= encodeURIComponent(JSON.stringify(user_vars)) %>";
+  var cache = "<%= process.env.PRODENV === 'production' %>";
+</script>
+<% include foot.html.ejs %>

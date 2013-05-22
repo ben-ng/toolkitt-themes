@@ -1,0 +1,19 @@
+{
+  "js/scripts.js": [
+    "js/lib/jquery.js",
+    "js/lib/jquery.mousewheel.js",
+    "js/lib/jquery.fancybox.js",
+    "js/lib/jquery.fancybox-buttons.js",
+    "js/lib/jquery.fancybox-media.js",
+    "js/lib/jquery.fancybox-thumbs.js",
+    "js/lib/ejs.js",
+    "js/lib/underscore.js",
+    "js/lib/backbone.js",
+    "js/app/app.js"
+  ],
+  "css/styles.css": [
+    "css/jquery.fancybox.css",
+    "css/jquery.fancybox-buttons.css",
+    "css/jquery.fancybox-thumbs.css"
+  ]
+}
