@@ -1,7 +1,7 @@
 exports.ignore = [
   'reel.html',
   'video.html',
-  'remote.html',
+  'core.html',
   '.DS_Store',
   'info.js'
 ];
