@@ -1,10 +1,11 @@
 //Parse the bootstrapped vars if possible
 if(TK.userVars) {
   try {
-    TK.userVars = JSON.parse(decodeURIComponent(user_vars));
+    TK.userVars = JSON.parse(decodeURIComponent(TK.userVars));
   }
   catch(e) {
     //Do nothing
+    TK.userVars = {};
   }
 }
 else {

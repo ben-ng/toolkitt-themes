@@ -8,6 +8,6 @@ Website.Models.User = Backbone.Model.extend({
     username:'',
     password:'',
     token:false,
-    errors:null
+    error:null
   }
 });

@@ -1,0 +1,28 @@
+  <div class="container">
+    <div class="row">
+      <div class="span2 brand">
+        <a href="/">{{sitetitle.value}}</a>
+      </div>
+
+      <div class="span8">
+        <ul class="bottom-links">
+          {{#if debug}}
+            <li><a href="/tests">Run Tests</a></li>
+          {{/if}}
+          {{#if isLoggedIn}}
+            <li><a href="/logout">Log Out</a></li>
+          {{else}}
+            <li><a href="/login">Log In</a></li>
+          {{/if}}
+        </ul>
+      </div>
+
+      <div class="span2">
+        <ul class="bottom-icons">
+          <li><a href="#fakelink" class="fui-pinterest"></a></li>
+          <li><a href="#fakelink" class="fui-facebook"></a></li>
+          <li><a href="#fakelink" class="fui-twitter"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
