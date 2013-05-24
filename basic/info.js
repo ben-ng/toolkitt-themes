@@ -1,5 +1,5 @@
 exports.ignore = [
-  'reel.html',
+  'page.html',
   'video.html',
   'core.html',
   '.DS_Store',

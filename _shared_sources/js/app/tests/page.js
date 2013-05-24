@@ -1,13 +1,13 @@
-var _folder_user;
+var _page_user;
 
-module("Folder", {
+module("Page", {
   setup: function() {
-    if(!_folder_user) {
+    if(!_page_user) {
       stop();
-      _folder_user = new Website.Models.User({username:'test',password:'pass'});
-      _folder_user.save(null,{
+      _page_user = new Website.Models.User({username:'test',password:'pass'});
+      _page_user.save(null,{
         success:function() {
-          ok(_folder_user.attributes.token === 'faketoken');
+          ok(_page_user.attributes.token === 'faketoken');
           start();
         },
         error: function(err) {
@@ -23,29 +23,29 @@ module("Folder", {
   }
 });
 test("Initialize", 2, function() {
-  var folder = new Website.Models.Folder();
-  ok(folder != null);
+  var page = new Website.Models.Page();
+  ok(page != null);
 });
 asyncTest("Save, Update & Delete", 5, function() {
-  var folder = new Website.Models.Folder({
-    name:'Test Folder',
+  var page = new Website.Models.Page({
+    name:'Test Page',
     items:[],
-    userId:_folder_user.get("id")
+    userId:_page_user.get("id")
   });
-  folder.save(null,{
+  page.save(null,{
     success:function() {
-      ok(folder.attributes.errors == null, "Save errors: "+JSON.stringify(folder.attributes.errors));
+      ok(page.attributes.errors == null, "Save errors: "+JSON.stringify(page.attributes.errors));
       
       //Perform an edit
-      folder.set("name","Changed Test Folder");
+      page.set("name","Changed Test Page");
       
-      folder.save(null,{
+      page.save(null,{
         success:function() {
-          ok(folder.attributes.errors == null, "Save errors: "+JSON.stringify(folder.attributes.errors));
-          ok(folder.attributes.name === "Changed Test Folder","Changed folder name correctly");
+          ok(page.attributes.errors == null, "Save errors: "+JSON.stringify(page.attributes.errors));
+          ok(page.attributes.name === "Changed Test Page","Changed page name correctly");
           
-          //Destroy the folder
-          folder.destroy({
+          //Destroy the page
+          page.destroy({
             success:function(model,resp) {
               ok(true);
               start();

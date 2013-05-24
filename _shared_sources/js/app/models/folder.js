@@ -17,6 +17,7 @@ Website.Models.Folder = Backbone.Model.extend({
   },
   parse: function(data, options) {
     data = data.folder;
+    delete data.folder;
     try {
       data.items = JSON.parse(data.itemList);
     }

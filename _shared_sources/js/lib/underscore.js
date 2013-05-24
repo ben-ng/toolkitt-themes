@@ -3,7 +3,7 @@
 
 // > http://underscorejs.org
 // > (c) 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
-// > Underscore may be freely distributed under the MIT license.
+// > Underscore may be fpagey distributed under the MIT license.
 
 // Baseline setup
 // --------------

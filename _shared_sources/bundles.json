@@ -13,17 +13,22 @@
     "js/app/website.js",
     "js/app/models/user.js",
     "js/app/models/folder.js",
+    "js/app/models/page.js",
     "js/app/models/customization.js",
     "js/app/models/image.js",
-    "js/app/models/page.js",
     "js/app/models/video.js",
+    "js/app/collections/pages.js",
+    "js/app/collections/folders.js",
     "js/app/init.js"
   ],
   "js/tests.js": [
     "js/lib/qunit.js",
     "js/app/tests/init.js",
     "js/app/tests/user.js",
-    "js/app/tests/folder.js"
+    "js/app/tests/page.js",
+    "js/app/tests/folder.js",
+    "js/app/tests/pages.js",
+    "js/app/tests/folders.js"
   ],
   "css/styles.css": [
     "css/jquery.fancybox.css",
