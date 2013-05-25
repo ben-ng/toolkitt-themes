@@ -5,6 +5,9 @@ Website.Views.Login = BaseView.extend({
     
     //Rerender on change
     this.model.on('change', this.render, this);
+    
+    //Fetch the current state
+    this.model.fetch();
   },
   events: {
     'submit':'login'

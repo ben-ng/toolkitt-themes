@@ -4,10 +4,10 @@ module("Page", {
   setup: function() {
     if(!_page_user) {
       stop();
-      _page_user = new Website.Models.User({username:'test',password:'pass'});
+      _page_user = new Website.Models.User({username:'test',password:'passpass'});
       _page_user.save(null,{
         success:function() {
-          ok(_page_user.attributes.token === 'faketoken');
+          notEqual(_page_user.attributes.token, false);
           start();
         },
         error: function(err) {

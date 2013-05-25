@@ -16,6 +16,21 @@
     if (!options.xhrFields) {
       options.xhrFields = {withCredentials:true};
     }
+    
+    if(options.success) {
+      var proxiedSuccess = options.success;
+      
+      options.success = function(data, textStatus, jqXHR) {
+        if(data.error) {
+          if(options.error) {
+            options.error(data.error, textStatus, jqXHR);
+          }
+        }
+        else {
+          return proxiedSuccess(data, textStatus, jqXHR);
+        }
+      }
+    }
 
     return proxiedSync(method, model, options);
   };

@@ -5,10 +5,10 @@ module("Folders", {
     if(!_folder_user) {
       stop();
       
-      _folder_user = new Website.Models.User({username:'test',password:'pass'});
+      _folder_user = new Website.Models.User({username:'test',password:'passpass'});
       _folder_user.save(null,{
         success:function() {
-          ok(_folder_user.attributes.token === 'faketoken');
+          notEqual(_folder_user.attributes.token, false);
           start();
         },
         error: function(err) {
@@ -31,7 +31,7 @@ asyncTest("Fetch: zero", 2, function() {
   var folders = new Website.Collections.Folders();
   folders.fetch({
     success:function(collection, response, options) {
-      ok(collection.length === 0, "Collection should be initially empty");
+      strictEqual(collection.length, 0, "Collection should be initially empty");
       start();
     },
     error:function(collection, response, options) {
@@ -49,11 +49,11 @@ asyncTest("Fetch: one", 4, function() {
   });
   folder.save(null,{
     success:function() {
-      ok(folder.attributes.errors == null, "Save errors: "+JSON.stringify(folder.attributes.errors));
+      equal(folder.attributes.errors, null, "Save errors: "+JSON.stringify(folder.attributes.errors));
       
       folders.fetch({
         success:function(collection, response, options) {
-          ok(collection.length === 1, "Collection should have one folder");
+          strictEqual(collection.length, 1, "Collection should have one folder");
           //Destroy the folder
           folder.destroy({
             success:function(model,resp) {
@@ -92,15 +92,15 @@ asyncTest("Fetch: two", 6, function() {
   });
   folder.save(null,{
     success:function() {
-      ok(folder.attributes.errors == null, "Save errors: "+JSON.stringify(folder.attributes.errors));
+      equal(folder.attributes.errors, null, "Save errors: "+JSON.stringify(folder.attributes.errors));
       
       folder2.save(null,{
         success:function() {
-          ok(folder2.attributes.errors == null, "Save errors: "+JSON.stringify(folder2.attributes.errors));
+          equal(folder2.attributes.errors, null, "Save errors: "+JSON.stringify(folder2.attributes.errors));
           
           folders.fetch({
             success:function(collection, response, options) {
-              ok(collection.length === 2, "Collection should have two folders");
+              strictEqual(collection.length, 2, "Collection should have two folders");
               //Destroy the folder
               folder.destroy({
                 success:function(model,resp) {

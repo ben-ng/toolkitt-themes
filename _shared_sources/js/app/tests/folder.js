@@ -4,10 +4,10 @@ module("Folder", {
   setup: function() {
     if(!_folder_user) {
       stop();
-      _folder_user = new Website.Models.User({username:'test',password:'pass'});
+      _folder_user = new Website.Models.User({username:'test',password:'passpass'});
       _folder_user.save(null,{
         success:function() {
-          ok(_folder_user.attributes.token === 'faketoken');
+          notEqual(_folder_user.attributes.token,false);
           start();
         },
         error: function(err) {

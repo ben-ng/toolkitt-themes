@@ -5,10 +5,10 @@ module("Pages", {
     if(!_page_user) {
       stop();
       
-      _page_user = new Website.Models.User({username:'test',password:'pass'});
+      _page_user = new Website.Models.User({username:'test',password:'passpass'});
       _page_user.save(null,{
         success:function() {
-          ok(_page_user.attributes.token === 'faketoken');
+          notEqual(_page_user.attributes.token, false);
           start();
         },
         error: function(err) {
@@ -31,7 +31,7 @@ asyncTest("Fetch: zero", 2, function() {
   var pages = new Website.Collections.Pages();
   pages.fetch({
     success:function(collection, response, options) {
-      ok(collection.length === 0, "Collection should be initially empty");
+      strictEqual(collection.length, 0, "Collection should be initially empty");
       start();
     },
     error:function(collection, response, options) {
@@ -49,11 +49,11 @@ asyncTest("Fetch: one", 4, function() {
   });
   page.save(null,{
     success:function() {
-      ok(page.attributes.errors == null, "Save errors: "+JSON.stringify(page.attributes.errors));
+      equal(page.attributes.errors, null, "Save errors: "+JSON.stringify(page.attributes.errors));
       
       pages.fetch({
         success:function(collection, response, options) {
-          ok(collection.length === 1, "Collection should have one page");
+          strictEqual(collection.length, 1, "Collection should have one page");
           //Destroy the page
           page.destroy({
             success:function(model,resp) {
@@ -92,15 +92,15 @@ asyncTest("Fetch: two", 6, function() {
   });
   page.save(null,{
     success:function() {
-      ok(page.attributes.errors == null, "Save errors: "+JSON.stringify(page.attributes.errors));
+      equal(page.attributes.errors, null, "Save errors: "+JSON.stringify(page.attributes.errors));
       
       page2.save(null,{
         success:function() {
-          ok(page2.attributes.errors == null, "Save errors: "+JSON.stringify(page2.attributes.errors));
+          equal(page2.attributes.errors, null, "Save errors: "+JSON.stringify(page2.attributes.errors));
           
           pages.fetch({
             success:function(collection, response, options) {
-              ok(collection.length === 2, "Collection should have two pages");
+              strictEqual(collection.length, 2, "Collection should have two pages");
               //Destroy the page
               page.destroy({
                 success:function(model,resp) {
@@ -140,4 +140,4 @@ asyncTest("Fetch: two", 6, function() {
       start();
     }
   });
-});
+});p
