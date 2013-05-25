@@ -61,35 +61,47 @@ var Website = new (BaseView.extend({
     });
   },
   /*
-  * Renders the app index
+  * This function will be overwritten by the show____ functions
   */
   render: function() {
-    var self = this;
-    this.loadTemplate({},'layouts/index',function(err,template) {
-      self.$el.html(template(self.userVars));
-      
-      self.assign(self.headerView, '#header');
-      self.assign(self.footerView, '#footer');
-    });
-    return this;
+    this.showIndex();
   },
   /*
   * Shows the index page
   */
   showIndex: function() {
-    this.render();
+    var self = this;
+    this.loadTemplate(self,'layouts/index',function(err) {
+      if(err) {
+        alert(err);
+      }
+      
+      self.render = function() {
+        self.$el.html(template(self.userVars));
+        
+        self.assign(self.headerView, '#header');
+        self.assign(self.footerView, '#footer');
+      }
+    });
+    return this;
   },
   /*
   * Shows the login page
   */
   showLogin: function() {
     var self = this;
-    this.loadTemplate({},'layouts/login',function(err,template) {
-      self.$el.html(template(self.userVars));
+    this.loadTemplate(this,'layouts/login',function(err) {
+      if(err) {
+        alert(err);
+      }
       
-      self.assign(self.headerView, '#header');
-      self.assign(self.loginView, '#login');
-      self.assign(self.footerView, '#footer');
+      self.render = function() {
+        self.$el.html(template(self.userVars));
+        
+        self.assign(self.headerView, '#header');
+        self.assign(self.loginView, '#login');
+        self.assign(self.footerView, '#footer');
+      }
     });
   },
   /*
@@ -106,10 +118,16 @@ var Website = new (BaseView.extend({
   },
   showTests: function() {
     var self = this;
-    this.loadTemplate({},'layouts/tests',function(err,template) {
-      self.$el.html(template(self.userVars));
-      self.assign(self.footerView, '#footer');
-      $.getScript('/js/tests.js');
+    this.loadTemplate(this,'layouts/tests',function(err) {
+      if(err) {
+        alert(err);
+      }
+      
+      self.render = function() {
+        self.$el.html(template(self.userVars));
+        self.assign(self.footerView, '#footer');
+        $.getScript('/js/tests.js');
+      }
     });
   }
 }))({el:document.body});
