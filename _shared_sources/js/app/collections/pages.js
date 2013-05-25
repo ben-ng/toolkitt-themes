@@ -4,13 +4,4 @@ Website.Collections.Pages = Backbone.Collection.extend({
   parse: function(data, options) {
     return data.pages;
   },
-  defaults: {
-    name:'Untitled',
-    items:[],
-    userId:'',
-    errors:null
-  },
-  sync: function(method, model, options) {
-    Backbone.sync(method, model, options);
-  }
 });
