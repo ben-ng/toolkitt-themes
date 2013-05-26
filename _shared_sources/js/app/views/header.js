@@ -3,6 +3,8 @@ Website.Views.Header = BaseView.extend({
     var self = this;
     Website.loadTemplate(this,'partials/header',function(err) {
       self.$el.html(self.template(Website.userVars));
+      
+      self.assign(Website.navbarView, '#navbar');
     });
     return self;
   }

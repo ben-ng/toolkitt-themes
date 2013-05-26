@@ -35,9 +35,22 @@ var Website = new (BaseView.extend({
       app: this
     });
     
+    //These models are the most important
+    this.user = new Website.Models.User({id:opts.userId});
+    this.pages = new Website.Collections.Pages();
+    this.pages.fetch({
+      data:{userId:opts.userId},
+      processData:true
+    });
+    
     //The footer and login views are persistant across all pages
-    this.loginView = new Website.Views.Login();
+    this.loginView = new Website.Views.Login({
+      user:this.user
+    });
     this.headerView = new Website.Views.Header();
+    this.navbarView = new Website.Views.Navbar({
+      pages:this.pages
+    });
     this.footerView = new Website.Views.Footer();
     
     //Track history
@@ -70,38 +83,19 @@ var Website = new (BaseView.extend({
   * Shows the index page
   */
   showIndex: function() {
-    var self = this;
-    this.loadTemplate(self,'layouts/index',function(err) {
-      if(err) {
-        alert(err);
-      }
-      
-      self.render = function() {
-        self.$el.html(template(self.userVars));
-        
-        self.assign(self.headerView, '#header');
-        self.assign(self.footerView, '#footer');
-      }
+    this.performAction('index',function() {
+        this.assign(this.headerView, '#header');
+        this.assign(this.footerView, '#footer');
     });
-    return this;
   },
   /*
   * Shows the login page
   */
   showLogin: function() {
-    var self = this;
-    this.loadTemplate(this,'layouts/login',function(err) {
-      if(err) {
-        alert(err);
-      }
-      
-      self.render = function() {
-        self.$el.html(template(self.userVars));
-        
-        self.assign(self.headerView, '#header');
-        self.assign(self.loginView, '#login');
-        self.assign(self.footerView, '#footer');
-      }
+    this.performAction('login',function() {
+        this.assign(this.headerView, '#header');
+        this.assign(this.loginView, '#login');
+        this.assign(this.footerView, '#footer');
     });
   },
   /*
@@ -110,24 +104,78 @@ var Website = new (BaseView.extend({
   showLogout: function() {
     //Log the user out
     var self = this;
-    this.loginView.model.save({id:'logout',token:null},{
+    this.user.save({id:'logout',token:null},{
       success:function() {
         self.Router.navigate('login',{trigger:true});
       }
     });
   },
+  /*
+  * Shows the createPage page
+  */
+  showCreatePage: function() {
+    var pageform = new Website.Views.CreatePage();
+    
+    this.performAction('createPage',function() {
+        this.assign(this.headerView, '#header');
+        this.assign(pageform, '#pageform');
+        this.assign(this.footerView, '#footer');
+    });
+  },
+  /*
+  * Shows a page
+  */
+  showPage: function(name) {
+    //Find the page in the navbar collection
+    name = decodeURIComponent(name);
+    
+    this.performAction('page',function() {
+        var pages = Website.pages.where({name:name});
+        var page;
+        
+        if(pages.length) {
+          page = pages[0];
+        }
+        else {
+          page = new Website.Models.Page({name:'Page not found'});
+        }
+        
+        var mediagrid = new Website.Views.MediaGrid({
+          page:page
+        });
+        
+        this.assign(this.headerView, '#header');
+        this.assign(mediagrid, '#mediagrid');
+        this.assign(this.footerView, '#footer');
+    });
+  },
+  /*
+  * Shows and runs the integration tests
+  */
   showTests: function() {
+    this.performAction('tests',function() {
+      this.assign(this.footerView, '#footer');
+      $.getScript('/js/tests.js');
+    });
+  },
+  /*
+  * Helper function
+  */
+  performAction: function(layout,cb) {
     var self = this;
-    this.loadTemplate(this,'layouts/tests',function(err) {
+    
+    this.loadTemplate(this,'layouts/'+layout,function(err, template) {
       if(err) {
         alert(err);
       }
       
       self.render = function() {
-        self.$el.html(template(self.userVars));
-        self.assign(self.footerView, '#footer');
-        $.getScript('/js/tests.js');
+        self.$el.html(template(self.userVars)).hide();
+        cb.apply(self);
+        self.$el.show();
+        return this;
       }
+      self.render();
     });
   }
 }))({el:document.body});

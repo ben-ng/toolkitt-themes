@@ -5,6 +5,8 @@ Website.AppRouter = Website.BaseRouter.extend({
     'login':'showLogin',
     'logout':'showLogout',
     'tests':'showTests',
+    'createPage':'showCreatePage',
+    'page/:name':'showPage',
     '':'showIndex'
   }
 });

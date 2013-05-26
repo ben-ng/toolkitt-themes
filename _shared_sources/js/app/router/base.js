@@ -28,7 +28,7 @@ Website.BaseRouter = Backbone.Router.extend({
       //Maintain scope!
       (function(a,b){
         router.route(a, b,function() {
-          app[b].apply(app);
+          app[b].apply(app,arguments);
         });
       })(route, methodName);
     }

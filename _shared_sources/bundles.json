@@ -31,8 +31,11 @@
     "js/app/collections/pages.js",
     "js/app/collections/folders.js",
     "js/app/views/login.js",
+    "js/app/views/navbar.js",
     "js/app/views/header.js",
     "js/app/views/footer.js",
+    "js/app/views/createPage.js",
+    "js/app/views/mediaGrid.js",
     "js/app/router/base.js",
     "js/app/router/router.js",
     "js/app/init.js"

@@ -1,0 +1,9 @@
+<ul class="nav nav-pills">
+  <li><a href="/">{{sitetitle.value}}</a></li>
+  {{#each pages}}
+    <li><a href="/page/{{name}}">{{name}}</a></li>
+  {{/each}}
+  {{#if isLoggedIn}}
+    <li><a href="/createPage">New Page</a></li>
+  {{/if}}
+</ul>

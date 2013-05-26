@@ -1,13 +1,14 @@
 Website.Views.Login = BaseView.extend({
   initialize: function(options) {
-    //Initialize an empty user
-    this.model = new Website.Models.User();
+    if(options.user) {
+      this.user = options.user;
+    }
     
     //Rerender on change
-    this.model.on('change', this.render, this);
+    this.listenTo(this.user, 'change', this.render, this);
     
     //Fetch the current state
-    this.model.fetch();
+    this.user.fetch();
   },
   events: {
     'submit':'login'
@@ -17,9 +18,9 @@ Website.Views.Login = BaseView.extend({
     
     Website.loadTemplate(self, 'partials/login', function() {
       //Update the isLoggedIn template variable
-      _.extend(Website.userVars,{
+      Website.userVars = _.extend(Website.userVars,{
         isLoggedIn: self.isLoggedIn(),
-        user: self.model.attributes
+        user: self.user.attributes
       });
       
       self.$el.html(self.template(Website.userVars));
@@ -34,9 +35,9 @@ Website.Views.Login = BaseView.extend({
     var username = this.$('input[name=username]').val();
     var password = this.$('input[name=password]').val();
     
-    this.model.save({username:username,password:password});
+    this.user.save({username:username,password:password});
   },
   isLoggedIn: function() {
-    return this.model.attributes.token ? true:false;
+    return this.user.attributes.token ? true:false;
   }
 });

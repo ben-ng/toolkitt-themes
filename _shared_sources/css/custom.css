@@ -1,3 +1,12 @@
-.centered {
-  text-align: center;
+/* Center text */
+.centered,.centered-pills { text-align:center; }
+/* Center pills */
+@media (min-width: 480px) {
+  .centered-pills ul.nav-pills { display:inline-block; }
+  .centered-pills li { display:inline; }
+  .centered-pills a { float:left; }
+  * html .centered-pills ul.nav-pills { display:inline; } /* IE6 */
+  *+html .centered-pills ul.nav-pills { display:inline; } /* IE7 */
 }
+/* Utility class for padding profile pictures*/
+img.pull-left.padded { margin:0 20px 20px 0; }
