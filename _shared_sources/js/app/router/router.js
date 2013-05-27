@@ -6,6 +6,7 @@ Website.AppRouter = Website.BaseRouter.extend({
     'logout':'showLogout',
     'tests':'showTests',
     'createPage':'showCreatePage',
+    'editPage/:name':'showEditPage',
     'page/:name':'showPage',
     '':'showIndex'
   }

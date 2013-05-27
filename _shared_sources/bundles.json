@@ -35,6 +35,7 @@
     "js/app/views/header.js",
     "js/app/views/footer.js",
     "js/app/views/createPage.js",
+    "js/app/views/editPage.js",
     "js/app/views/mediaGrid.js",
     "js/app/router/base.js",
     "js/app/router/router.js",
@@ -55,8 +56,7 @@
     "css/jquery.fancybox-thumbs.css",
     "css/bootstrap.css",
     "css/bootstrap-responsive.css",
-    "css/flat-ui.css",
-    "css/custom.css",
+    "less/flat-ui.less",
     "css/qunit.css"
   ]
 }

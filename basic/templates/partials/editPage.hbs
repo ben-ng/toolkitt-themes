@@ -1,11 +1,12 @@
 <form>
   <fieldset>
-    <legend>Create A New Page</legend>
+    <legend>Edit {{page.name}}</legend>
     <label class="control-label" for="name">Page Title</label>
     <input type="text" id="name" name="name" placeholder="Untitled Page" value="{{page.name}}">
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="btn btn-success">Create</button>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a class="btn btn-danger">Delete</a>
       </div>
     </div>
   </fieldset>

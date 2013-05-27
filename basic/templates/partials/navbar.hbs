@@ -1,9 +1,30 @@
-<ul class="nav nav-pills">
-  <li><a href="/">{{sitetitle.value}}</a></li>
+<ul class="nav nav-boxes">
+  {{#if isHome}}
+    <li><a href="/" class="current">{{sitetitle.value}}</a></li>
+  {{else}}
+    <li><a href="/">{{sitetitle.value}}</a></li>
+  {{/if}}
   {{#each pages}}
-    <li><a href="/page/{{name}}">{{name}}</a></li>
+    {{#if active}}
+      <li><a href="{{href}}" class="current">{{name}}</a></li>
+    {{else}}
+      <li><a href="{{href}}">{{name}}</a></li>
+    {{/if}}
   {{/each}}
+</ul>
+<ul class="nav nav-boxes actionable">
+  {{#if isPage}}
+    {{#if isEditingPage}}
+      <li><a href="{{editHref}}" class="current">Edit Page</a></li>
+    {{else}}
+      <li><a href="{{editHref}}">Edit Page</a></li>
+    {{/if}}
+  {{/if}}
   {{#if isLoggedIn}}
-    <li><a href="/createPage">New Page</a></li>
+    {{#if isCreatingPage}}
+      <li><a href="{{createHref}}" class="current">New Page</a></li>
+    {{else}}
+      <li><a href="{{createHref}}">New Page</a></li>
+    {{/if}}
   {{/if}}
 </ul>

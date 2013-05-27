@@ -47,7 +47,7 @@ var Website = new (BaseView.extend({
     this.loginView = new Website.Views.Login({
       user:this.user
     });
-    this.headerView = new Website.Views.Header();
+    this.headerView = new Website.Views.Header({title:'Loading'});
     this.navbarView = new Website.Views.Navbar({
       pages:this.pages
     });
@@ -83,6 +83,7 @@ var Website = new (BaseView.extend({
   * Shows the index page
   */
   showIndex: function() {
+    this.headerView.title = this.userVars.sitetitle.value;
     this.performAction('index',function() {
         this.assign(this.headerView, '#header');
         this.assign(this.footerView, '#footer');
@@ -92,6 +93,7 @@ var Website = new (BaseView.extend({
   * Shows the login page
   */
   showLogin: function() {
+    this.headerView.title = "Log In";
     this.performAction('login',function() {
         this.assign(this.headerView, '#header');
         this.assign(this.loginView, '#login');
@@ -114,9 +116,40 @@ var Website = new (BaseView.extend({
   * Shows the createPage page
   */
   showCreatePage: function() {
+    this.headerView.title = "New Page";
+    
     var pageform = new Website.Views.CreatePage();
     
-    this.performAction('createPage',function() {
+    this.performAction('pageDetail',function() {
+        this.assign(this.headerView, '#header');
+        this.assign(pageform, '#pageform');
+        this.assign(this.footerView, '#footer');
+    });
+  },
+  /*
+  * Shows the editPage page
+  */
+  showEditPage: function(name) {
+    this.headerView.title = "Edit Page";
+    
+    //Find the page in the navbar collection
+    name = decodeURIComponent(name);
+    
+    this.performAction('pageDetail',function() {
+        var pages = Website.pages.where({name:name});
+        var page;
+        
+        if(pages.length) {
+          page = pages[0];
+        }
+        else {
+          page = new Website.Models.Page({name:'Page not found'});
+        }
+        
+        var pageform = new Website.Views.EditPage({
+          page:page
+        });
+        
         this.assign(this.headerView, '#header');
         this.assign(pageform, '#pageform');
         this.assign(this.footerView, '#footer');
@@ -126,6 +159,8 @@ var Website = new (BaseView.extend({
   * Shows a page
   */
   showPage: function(name) {
+    this.headerView.title = "Loading";
+    
     //Find the page in the navbar collection
     name = decodeURIComponent(name);
     
@@ -144,6 +179,8 @@ var Website = new (BaseView.extend({
           page:page
         });
         
+        this.headerView.title = page.attributes.name;
+        
         this.assign(this.headerView, '#header');
         this.assign(mediagrid, '#mediagrid');
         this.assign(this.footerView, '#footer');
@@ -153,7 +190,10 @@ var Website = new (BaseView.extend({
   * Shows and runs the integration tests
   */
   showTests: function() {
+    this.headerView.title = "Integration Tests";
+    
     this.performAction('tests',function() {
+      this.assign(this.headerView, '#header');
       this.assign(this.footerView, '#footer');
       $.getScript('/js/tests.js');
     });
