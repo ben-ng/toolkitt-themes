@@ -1,19 +1,17 @@
-Website.Models.Page = Backbone.Model.extend({
+Website.Models.Page = BaseModel.extend({
   urlRoot:TK.baseURL+'/pages',
-  methodUrl: function(method) {
-    if(method == "delete"){
-      return this.urlRoot + "/" +this.attributes.id+".json";
+  defaults: {
+    name:'Untitled',
+    items:[],
+    userId:'',
+    errors:null
+  },
+  sync: function(method, model, options) {
+    if(method === 'create' || method === 'update') {
+      //For the create method we should stringify the items before sending to the server
+      model.set("itemList",JSON.stringify(model.get("items")));
     }
-    else if(method == "update"){
-      return this.urlRoot + "/" +this.attributes.id+".json";
-    }
-    else if(method == "read"){
-      return this.urlRoot + "/" +this.attributes.id+".json";
-    }
-    else if(method == "create"){
-      return this.urlRoot + ".json";
-    } 
-    return false;
+    Backbone.sync(method, model, options);
   },
   parse: function(data, options) {
     data = data.page;
@@ -28,18 +26,5 @@ Website.Models.Page = Backbone.Model.extend({
       delete data.itemList;
     }
     return data;
-  },
-  defaults: {
-    name:'Untitled',
-    items:[],
-    userId:'',
-    errors:null
-  },
-  sync: function(method, model, options) {
-    if(method === 'create') {
-      //For the create method we should stringify the items before sending to the server
-      model.set("itemList",JSON.stringify(model.get("items")));
-    }
-    Backbone.sync(method, model, options);
   }
 });

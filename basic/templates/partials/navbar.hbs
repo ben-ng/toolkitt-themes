@@ -14,10 +14,15 @@
 </ul>
 <ul class="nav nav-boxes actionable">
   {{#if isPage}}
-    {{#if isEditingPage}}
-      <li><a href="{{editHref}}" class="current">Edit Page</a></li>
+    {{#if isAddingMedia}}
+      <li><a href="{{addMediaHref}}" class="current">Add Media</a></li>
     {{else}}
-      <li><a href="{{editHref}}">Edit Page</a></li>
+      <li><a href="{{addMediaHref}}">Add Media</a></li>
+    {{/if}}
+    {{#if isEditingPage}}
+      <li><a href="{{editPageHref}}" class="current">Edit Page</a></li>
+    {{else}}
+      <li><a href="{{editPageHref}}">Edit Page</a></li>
     {{/if}}
   {{/if}}
   {{#if isLoggedIn}}

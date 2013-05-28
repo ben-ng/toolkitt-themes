@@ -10,6 +10,11 @@ var Website = new (BaseView.extend({
   */
   userVars:{},
   /*
+  * Valid file extensions
+  */
+  videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],
+  imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
+  /*
   * Handles links
   */
   events: {
@@ -29,6 +34,9 @@ var Website = new (BaseView.extend({
     this.userVars = _.extend(opts.userVars,{debug:opts.debug});
     this.userId = opts.userId;
     this.baseURL = opts.baseURL;
+    
+    //Configure filepicker.io
+    filepicker.setKey(opts.filePickerKey);
     
     //Our routes will call methods in this object
     this.Router = new Website.AppRouter({
@@ -147,6 +155,35 @@ var Website = new (BaseView.extend({
         }
         
         var pageform = new Website.Views.EditPage({
+          page:page
+        });
+        
+        this.assign(this.headerView, '#header');
+        this.assign(pageform, '#pageform');
+        this.assign(this.footerView, '#footer');
+    });
+  },
+  /*
+  * Shows the editPage page
+  */
+  showAddMedia: function(name) {
+    this.headerView.title = "Add Media";
+    
+    //Find the page in the navbar collection
+    name = decodeURIComponent(name);
+    
+    this.performAction('pageDetail',function() {
+        var pages = Website.pages.where({name:name});
+        var page;
+        
+        if(pages.length) {
+          page = pages[0];
+        }
+        else {
+          page = new Website.Models.Page({name:'Page not found'});
+        }
+        
+        var pageform = new Website.Views.AddMedia({
           page:page
         });
         

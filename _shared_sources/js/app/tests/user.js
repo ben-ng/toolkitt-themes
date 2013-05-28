@@ -43,11 +43,14 @@ asyncTest("Log In (Wrong Password)", 3, function() {
     }
   });
 });
-asyncTest("Log In (Correct Password)", 3, function() {
+asyncTest("Log In (Correct Password)", 6, function() {
   var user = new Website.Models.User({username:'test',password:'passpass'});
   user.save(null,{
     success:function(usermodel) {
       notEqual(usermodel.attributes.token, false, 'User was logged in');
+      notEqual(usermodel.attributes.policy, '', 'User policy is set');
+      notEqual(usermodel.attributes.signature, '', 'User signature is set');
+      notEqual(usermodel.attributes.path, '', 'User path is set');
       
       var bfreshuser = new Website.Models.User();
       bfreshuser.fetch({
