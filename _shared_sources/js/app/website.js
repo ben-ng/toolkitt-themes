@@ -31,7 +31,7 @@ var Website = new (BaseView.extend({
   * Handles links
   */
   events: {
-    'click a':function(e) {
+    'click a.app':function(e) {
       e.preventDefault();
       this.Router.navigate(e.target.pathname, {trigger:true});
     }

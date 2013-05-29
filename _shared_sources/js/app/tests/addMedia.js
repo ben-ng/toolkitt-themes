@@ -22,7 +22,7 @@ module("AddMedia", {
     }
   }
 });
-asyncTest("Add media to page", 4, function() {
+asyncTest("Add media to page", 7, function() {
   var page = new Website.Models.Page({
     name:'Add Media Test Page',
     items:[],
@@ -36,14 +36,36 @@ asyncTest("Add media to page", 4, function() {
         //Called after dummy file is saved
         //And the model has been re-fetched
         strictEqual(page.attributes.items.length,1);
-        page.destroy({
+        //Check if the page media is correct
+        page.media.fetch({
           success:function() {
-            ok(true);
-            start();
+            strictEqual(page.media.length,1,'Media collection should have one item');
+            strictEqual(page.media.at(0).attributes.id,page.attributes.items[0].ID,'Media item should have same id');
+            page.destroy({
+              success:function() {
+                ok(true);
+                //Destroy the test image
+                var destImage = new Website.Models.Image();
+                destImage.set("id",page.attributes.items[0].ID);
+                destImage.destroy({
+                  success:function() {
+                    ok(true);
+                    start();
+                  },
+                  error:function() {
+                    ok(false);
+                    start();
+                  }
+                });
+              },
+              error:function() {
+                ok(false);
+                start();
+              }
+            });
           },
-          error:function() {
-            ok(false);
-            start();
+          error:function(err) {
+            ok(false,err);
           }
         });
       });

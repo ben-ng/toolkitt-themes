@@ -26,7 +26,6 @@ Website.Views.AddMedia = BaseView.extend({
   },
   //Tries to delete the page
   startFilepicker: function(e, debug_cb) {
-    console.log("A");
     if(e) {
       e.preventDefault();
       e.stopPropagation();

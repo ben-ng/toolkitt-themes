@@ -1,3 +1,3 @@
-Website.Models.Video = Backbone.Model.extend({
-  urlRoot:TK.baseURL+'/video'
+Website.Models.Video = Website.Models.Media.extend({
+  urlRoot:TK.baseURL+'/videos'
 });

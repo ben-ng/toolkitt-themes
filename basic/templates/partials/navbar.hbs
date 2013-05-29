@@ -1,14 +1,14 @@
 <ul class="nav nav-boxes">
   {{#if isHome}}
-    <li><a href="/" class="current">{{sitetitle.value}}</a></li>
+    <li><a href="/" class="current app">{{sitetitle.value}}</a></li>
   {{else}}
-    <li><a href="/">{{sitetitle.value}}</a></li>
+    <li><a href="/" class="app">{{sitetitle.value}}</a></li>
   {{/if}}
   {{#each pages}}
     {{#if active}}
-      <li><a href="{{href}}" class="current">{{name}}</a></li>
+      <li><a href="{{href}}" class="current app">{{name}}</a></li>
     {{else}}
-      <li><a href="{{href}}">{{name}}</a></li>
+      <li><a href="{{href}}" class="app">{{name}}</a></li>
     {{/if}}
   {{/each}}
 </ul>
@@ -16,20 +16,20 @@
 <ul class="nav nav-boxes actionable">
   {{#if isPage}}
     {{#if isAddingMedia}}
-      <li><a href="{{addMediaHref}}" class="current">Add Media</a></li>
+      <li><a href="{{addMediaHref}}" class="current app">Add Media</a></li>
     {{else}}
-      <li><a href="{{addMediaHref}}">Add Media</a></li>
+      <li><a href="{{addMediaHref}}" class="app">Add Media</a></li>
     {{/if}}
     {{#if isEditingPage}}
-      <li><a href="{{editPageHref}}" class="current">Edit Page</a></li>
+      <li><a href="{{editPageHref}}" class="current app">Edit Page</a></li>
     {{else}}
-      <li><a href="{{editPageHref}}">Edit Page</a></li>
+      <li><a href="{{editPageHref}}" class="app">Edit Page</a></li>
     {{/if}}
   {{/if}}
   {{#if isCreatingPage}}
-    <li><a href="{{createHref}}" class="current">New Page</a></li>
+    <li><a href="{{createHref}}" class="current app">New Page</a></li>
   {{else}}
-    <li><a href="{{createHref}}">New Page</a></li>
+    <li><a href="{{createHref}}" class="app">New Page</a></li>
   {{/if}}
 </ul>
 {{/if}}
