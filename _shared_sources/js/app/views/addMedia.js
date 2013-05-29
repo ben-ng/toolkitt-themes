@@ -3,6 +3,8 @@ Website.Views.AddMedia = BaseView.extend({
     if(options.page) {
       this.page = options.page;
     }
+    
+    this.listenTo(this.page,'change',this.render,this);
   },
   events: {
     'click a.filepicker':'startFilepicker'
@@ -23,33 +25,13 @@ Website.Views.AddMedia = BaseView.extend({
     return self;
   },
   //Tries to delete the page
-  startFilepicker: function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  startFilepicker: function(e, debug_cb) {
+    console.log("A");
+    if(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     
-    var self = this;
-    filepicker.pickMultiple({
-      extensions:Website.videoExts.concat(Website.imageExts),
-      path:Website.user.attributes.path,
-      signature:Website.user.attributes.signature,
-      policy:Website.user.attributes.policy,
-      services:[
-        'COMPUTER',
-        'DROPBOX',
-        'FLICKR',
-        'GOOGLE_DRIVE',
-        'FTP',
-        'VIDEO'
-      ]
-    },
-    function(FPFile) {
-      console.log("Store successful:", JSON.stringify(FPFile));
-    },
-    function(FPError) {
-      console.log(FPError.toString());
-    },
-    function(progress) {
-      console.log("Loading: "+progress+"%");
-    });
+    this.page.addMedia(debug_cb);
   }
 });

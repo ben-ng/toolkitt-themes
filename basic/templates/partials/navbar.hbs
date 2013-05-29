@@ -12,6 +12,7 @@
     {{/if}}
   {{/each}}
 </ul>
+{{#if isLoggedIn}}
 <ul class="nav nav-boxes actionable">
   {{#if isPage}}
     {{#if isAddingMedia}}
@@ -25,11 +26,10 @@
       <li><a href="{{editPageHref}}">Edit Page</a></li>
     {{/if}}
   {{/if}}
-  {{#if isLoggedIn}}
-    {{#if isCreatingPage}}
-      <li><a href="{{createHref}}" class="current">New Page</a></li>
-    {{else}}
-      <li><a href="{{createHref}}">New Page</a></li>
-    {{/if}}
+  {{#if isCreatingPage}}
+    <li><a href="{{createHref}}" class="current">New Page</a></li>
+  {{else}}
+    <li><a href="{{createHref}}">New Page</a></li>
   {{/if}}
 </ul>
+{{/if}}

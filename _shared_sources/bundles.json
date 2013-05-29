@@ -44,11 +44,13 @@
   ],
   "js/tests.js": [
     "js/lib/qunit.js",
+    "js/app/tests/website.js",
     "js/app/tests/init.js",
     "js/app/tests/user.js",
     "js/app/tests/image.js",
     "js/app/tests/page.js",
-    "js/app/tests/pages.js"
+    "js/app/tests/pages.js",
+    "js/app/tests/addMedia.js"
   ],
   "css/styles.css": [
     "css/jquery.fancybox.css",

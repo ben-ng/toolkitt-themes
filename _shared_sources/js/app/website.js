@@ -15,6 +15,19 @@ var Website = new (BaseView.extend({
   videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
   /*
+  * Utils
+  */
+  util: {
+    isVideo:function(filename) {
+      var ext = '.'+filename.split('.').pop();
+      return Website.videoExts.indexOf(ext)>=0;
+    },
+    isImage:function(filename) {
+      var ext = '.'+filename.split('.').pop();
+      return Website.imageExts.indexOf(ext)>=0;
+    }
+  },
+  /*
   * Handles links
   */
   events: {

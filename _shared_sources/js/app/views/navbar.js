@@ -14,17 +14,18 @@ Website.Views.Navbar = BaseView.extend({
     var modelAttrs = [];
     
     this.pages.forEach(function(model) {
+      var safename = encodeURIComponent(model.attributes.name);
       var attrs = _.extend(_.clone(model.attributes), {
-        href: '/page/'+encodeURIComponent(model.attributes.name),
-        editHref: '/editPage/'+encodeURIComponent(model.attributes.name),
-        addHref: '/editPage/'+encodeURIComponent(model.attributes.name)+'/addMedia',
+        href: '/page/'+safename,
+        editHref: '/editPage/'+safename,
+        addHref: '/editPage/'+safename+'/addMedia',
         active: false
       });
       if(
         //Exact match
         Backbone.history.fragment === attrs.href.replace(/^\//,'') ||
         //Editing or adding media to page
-        Backbone.history.fragment.indexOf('editPage/'+model.attributes.name)==0
+        Backbone.history.fragment.indexOf('editPage/'+safename)==0
       ) {
         attrs.active = true;
         editPageHref = attrs.editHref;
@@ -43,8 +44,8 @@ Website.Views.Navbar = BaseView.extend({
           createHref:'/createPage',
           isHome:Backbone.history.fragment === '',
           isPage:Backbone.history.fragment.match(/^(edit)?[pP]age\//)?true:false,
-          isEditingPage:Backbone.history.fragment.match(/^editPage\/\w+$/)?true:false,
-          isAddingMedia:Backbone.history.fragment.match(/^editPage\/\w+\/addMedia$/)?true:false,
+          isEditingPage:Backbone.history.fragment.match(/^editPage\/[a-zA-Z0-9%]+$/)?true:false,
+          isAddingMedia:Backbone.history.fragment.match(/^editPage\/[a-zA-Z0-9%]+\/addMedia$/)?true:false,
           isCreatingPage:Backbone.history.fragment.match(/^createPage/)?true:false
         })
       ));
