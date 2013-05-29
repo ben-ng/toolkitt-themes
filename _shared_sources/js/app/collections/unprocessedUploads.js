@@ -8,6 +8,6 @@ Website.Collections.UnprocessedUploads = Backbone.Collection.extend({
     }
   },
   parse: function(data, options) {
-    return data.models;
+    return data.media;
   }
 });

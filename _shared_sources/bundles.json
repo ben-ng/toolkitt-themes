@@ -31,6 +31,7 @@
     "js/app/models/image.js",
     "js/app/models/video.js",
     "js/app/collections/pages.js",
+    "js/app/collections/unprocessedUploads.js",
     "js/app/collections/pageMedia.js",
     "js/app/views/login.js",
     "js/app/views/navbar.js",
@@ -50,6 +51,7 @@
     "js/app/tests/init.js",
     "js/app/tests/user.js",
     "js/app/tests/image.js",
+    "js/app/tests/video.js",
     "js/app/tests/page.js",
     "js/app/tests/pages.js",
     "js/app/tests/addMedia.js"

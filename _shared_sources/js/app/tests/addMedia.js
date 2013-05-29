@@ -22,7 +22,7 @@ module("AddMedia", {
     }
   }
 });
-asyncTest("Add media to page", 7, function() {
+asyncTest("Add media to page", 9, function() {
   var page = new Website.Models.Page({
     name:'Add Media Test Page',
     items:[],
@@ -41,16 +41,33 @@ asyncTest("Add media to page", 7, function() {
           success:function() {
             strictEqual(page.media.length,1,'Media collection should have one item');
             strictEqual(page.media.at(0).attributes.id,page.attributes.items[0].ID,'Media item should have same id');
-            page.destroy({
+            //Check if the number of unprocessed uploads is correct
+            var unprocessed = new Website.Collections.UnprocessedUploads();
+            unprocessed.fetch({
               success:function() {
-                ok(true);
-                //Destroy the test image
-                var destImage = new Website.Models.Image();
-                destImage.set("id",page.attributes.items[0].ID);
-                destImage.destroy({
+                strictEqual(unprocessed.length,1,'There should be one unprocessed item');
+                if(unprocessed.length) {
+                  strictEqual(unprocessed.at(0).attributes.id,page.attributes.items[0].ID,'Unprocessed item should have same id');
+                }
+                else {
+                  ok(false,'See previous test');
+                }
+                page.destroy({
                   success:function() {
                     ok(true);
-                    start();
+                    //Destroy the test image
+                    var destImage = new Website.Models.Image();
+                    destImage.set("id",page.attributes.items[0].ID);
+                    destImage.destroy({
+                      success:function() {
+                        ok(true);
+                        start();
+                      },
+                      error:function() {
+                        ok(false);
+                        start();
+                      }
+                    });
                   },
                   error:function() {
                     ok(false);
