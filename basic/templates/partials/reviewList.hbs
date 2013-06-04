@@ -1,0 +1,17 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>File</th>
+      <th colspan="2">Problem</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each unprocessed}}
+      <tr>
+        <td><big>{{name}}</big></td>
+        <td><big>{{reviewIssue}}</big></td>
+        <td><a href="{{editHref}}" class="app btn btn-info btn-mini">Fix It!</a></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

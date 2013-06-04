@@ -2,7 +2,7 @@ var _image_user;
 
 module("Website");
 test("isVideo", function() {
-  strictEqual(Website.util.isVideo('xxx.avi'),true);
+  strictEqual(Website.util.isVideo('xxx.flv'),true);
   strictEqual(Website.util.isVideo('xxx.mp4'),true);
   strictEqual(Website.util.isVideo('xxx.gif'),false);
   strictEqual(Website.util.isVideo('xxx.png'),false);

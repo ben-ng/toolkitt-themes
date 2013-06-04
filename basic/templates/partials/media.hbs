@@ -1,0 +1,11 @@
+{{#with media}}
+  {{#if isVideo}}
+    <video id="example_video_1" class="video-js vjs-default-skin"  
+    controls preload="auto" width="640" height="264"  
+    poster="{{thumbnailUrl}}">  
+    <source src="{{url}}" type='video/mp4' />
+    </video>
+  {{else}}
+    <img class="pickerHolder img-polaroid" alt="{{name}}" src="{{url}}" />
+  {{/if}}
+{{/with}}

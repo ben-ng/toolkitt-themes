@@ -29,19 +29,20 @@ test("Initialize", 2, function() {
 asyncTest("Save, Update & Delete", 18, function() {
   var video = new Website.Models.Video({
     name:'Test Video',
-    s3key:'baz',
-    mimeType:'video/png',
+    fpkey:'baz',
+    mimeType:'video/avi',
     originalFilesize:9000,
     userId:_video_user.get("id"),
     attribs:[{author:'Tom',year:1991}],
-    status:0
+    status:0,
+    debug:true
   });
   video.save(null,{
     success:function() {
       equal(video.attributes.errors, null, "Save errors: "+JSON.stringify(video.attributes.errors));
       strictEqual(video.attributes.name, "Test Video");
-      strictEqual(video.attributes.s3key, "baz");
-      strictEqual(video.attributes.mimeType, "video/png");
+      strictEqual(video.attributes.fpkey, "baz");
+      strictEqual(video.attributes.mimeType, "video/avi");
       strictEqual(video.attributes.originalFilesize, 9000);
       strictEqual(video.attributes.userId, _video_user.get("id"));
       deepEqual(video.attributes.attribs, [{author:'Tom',year:1991}]);
@@ -49,13 +50,14 @@ asyncTest("Save, Update & Delete", 18, function() {
       
       //Perform an edit
       video.set("name","Changed Test Video");
+      video.set("debug",true);
       
       video.save(null,{
         success:function() {
           equal(video.attributes.errors, null, "Save errors: "+JSON.stringify(video.attributes.errors));
           strictEqual(video.attributes.name, "Changed Test Video","Changed video name correctly");
-          strictEqual(video.attributes.s3key, "baz");
-          strictEqual(video.attributes.mimeType, "video/png");
+          strictEqual(video.attributes.fpkey, "baz");
+          strictEqual(video.attributes.mimeType, "video/avi");
           strictEqual(video.attributes.originalFilesize, 9000);
           strictEqual(video.attributes.userId, _video_user.get("id"));
           deepEqual(video.attributes.attribs, [{author:'Tom',year:1991}]);

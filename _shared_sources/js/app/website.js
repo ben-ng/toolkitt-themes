@@ -10,10 +10,14 @@ var Website = new (BaseView.extend({
   */
   userVars:{},
   /*
-  * Valid file extensions
+  * Valid file extensions and other constants
   */
-  videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],
+  /*videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],*/
+  videoExts: ['.mp4', '.m4v', '.f4v', '.webm', '.ogv','.flv'],
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
+  thumbnailDims: {width:180,height:240},
+  flashMessage:null,
+  s3prefix:'http://toolkitt.s3.amazonaws.com/',
   /*
   * Utils
   */
@@ -51,18 +55,33 @@ var Website = new (BaseView.extend({
     //Configure filepicker.io
     filepicker.setKey(opts.filePickerKey);
     
+    //Configure video.js
+    vjs.options.flash.swf = "http://example.com/path/to/video-js.swf";
+    
     //Our routes will call methods in this object
     this.Router = new Website.AppRouter({
       app: this
     });
     
-    //These models are the most important
+    //These models/collections are the most important
     this.user = new Website.Models.User({id:opts.userId});
     this.pages = new Website.Collections.Pages();
-    this.pages.fetch({
-      data:{userId:opts.userId},
-      processData:true
-    });
+    this.unprocessed = new Website.Collections.UnprocessedUploads();
+    
+    //The page will have to be rendered if any of these change
+    /*
+    var forceUpdate = function() {
+      var frag = Backbone.history.fragment;
+      if(frag !== 'tests') {
+        Backbone.history.fragment = null;
+        Backbone.history.navigate(frag, true);
+      }
+    };
+    
+    this.listenTo(this.user,'change',forceUpdate,this);
+    this.listenTo(this.pages,'change add remove',forceUpdate,this);
+    this.listenTo(this.unprocessed,'change add remove',forceUpdate,this);
+    */
     
     //The footer and login views are persistant across all pages
     this.loginView = new Website.Views.Login({
@@ -70,12 +89,33 @@ var Website = new (BaseView.extend({
     });
     this.headerView = new Website.Views.Header({title:'Loading'});
     this.navbarView = new Website.Views.Navbar({
-      pages:this.pages
+      pages:this.pages,
+      unprocessed:this.unprocessed
     });
     this.footerView = new Website.Views.Footer();
     
+    //Flash functions
+    this.setFlash = function(message,type) {
+      if(!type) {
+        type='info';
+      }
+      self.flash = {message: message, type: type};
+      self.render();
+    };
+    this.clearFlash = function() {
+      self.flash=null;
+      self.render();
+    };
+    
     //Track history
     Backbone.history.start();
+    
+    //Fetch initial data
+    this.pages.fetch({
+      data:{userId:opts.userId},
+      processData:true
+    });
+    this.unprocessed.fetch();
   },
   /*
   * Helper function, loads templates
@@ -177,7 +217,7 @@ var Website = new (BaseView.extend({
     });
   },
   /*
-  * Shows the editPage page
+  * Shows the addMedia page
   */
   showAddMedia: function(name) {
     this.headerView.title = "Add Media";
@@ -202,6 +242,38 @@ var Website = new (BaseView.extend({
         
         this.assign(this.headerView, '#header');
         this.assign(pageform, '#pageform');
+        this.assign(this.footerView, '#footer');
+    });
+  },
+  /*
+  * Shows the editMedia page
+  */
+  showEditMedia: function(type,id) {
+    this.headerView.title = "Edit Media";
+    
+    //Find the page in the navbar collection
+    id = decodeURIComponent(id);
+    var media;
+    
+    if(type==='video') {
+      media = new Website.Models.Video({id:id})
+    }
+    else {
+      media = new Website.Models.Image({id:id})
+    }
+    
+    var editForm = new Website.Views.EditMedia({
+      media:media
+    });
+    
+    var mediaPreview = new Website.Views.Media({
+      media:media
+    });
+    
+    this.performAction('editMedia',function() {
+        this.assign(this.headerView, '#header');
+        this.assign(editForm, '#editForm');
+        this.assign(mediaPreview, '#preview');
         this.assign(this.footerView, '#footer');
     });
   },
@@ -233,6 +305,21 @@ var Website = new (BaseView.extend({
         
         this.assign(this.headerView, '#header');
         this.assign(mediagrid, '#mediagrid');
+        this.assign(this.footerView, '#footer');
+    });
+  },
+  /*
+  * Shows the upload review page page
+  */
+  showReview: function(name) {
+    var reviewList = new Website.Views.ReviewList({unprocessed:this.unprocessed});
+    this.headerView.title = "Loading";
+    
+    this.performAction('review',function() {
+        this.headerView.title = "Review Uploads";
+        
+        this.assign(this.headerView, '#header');
+        this.assign(reviewList, '#reviewList');
         this.assign(this.footerView, '#footer');
     });
   },

@@ -25,16 +25,22 @@ Website.Models.Page = BaseModel.extend({
     finally {
       delete data.itemList;
     }
-    //Set the page media collection
-    this.media = new Website.Collections.PageMedia({page:this});
+    //Set the page media collection if needed
+    if(!this.media) {
+      this.media = new Website.Collections.PageMedia({page:this});
+      this.media.fetch();
+    }
+    else {
+      this.media.fetch();
+    }
     return data;
   },
   addMedia: function(debug_cb) {
     var self = this;
     
-    filepicker.pickMultiple({
+    filepicker.pickAndStore({
       extensions:Website.videoExts.concat(Website.imageExts),
-      path:Website.user.attributes.path,
+      multiple:true,
       signature:Website.user.attributes.signature,
       policy:Website.user.attributes.policy,
       services:[
@@ -42,10 +48,14 @@ Website.Models.Page = BaseModel.extend({
         'DROPBOX',
         'FLICKR',
         'GOOGLE_DRIVE',
-        'FTP',
-        'VIDEO'
+        'FTP'
       ],
       debug:debug_cb?true:false
+    },
+    {
+      location:'s3',
+      path:Website.user.attributes.path,
+      access:'public'
     },
     function(FPFiles) {
       if(Object.prototype.toString.call( FPFiles ) !== '[object Array]') {
@@ -55,12 +65,15 @@ Website.Models.Page = BaseModel.extend({
       var newItems = _.clone(self.attributes.items);
       var itemsToGo = FPFiles.length;
       var afterItemCompete = function(new_id, new_name, type, after_save_cb) {
-        newItems.push({ID:new_id,NAME:new_name,TYPE:"image",THUMB:"http://placehold.it/320x180"});
+        newItems.push({ID:new_id,NAME:new_name,TYPE:type,THUMB:"http://placehold.it/320x180"});
         itemsToGo--;
         if(itemsToGo===0) {
           self.set("items",newItems);
           self.save(null,{
-            success:after_save_cb,
+            success:function() {
+              Website.unprocessed.fetch();
+              after_save_cb();
+            },
             error:function(err) {
               alert(err);
             }
@@ -75,9 +88,9 @@ Website.Models.Page = BaseModel.extend({
           var type;
           var opts = {
             name: FPFile.filename,
-            s3key: FPFile.url,
-            mimeType: FPFile.mimeType,
-            originalFilesize: FPFile.filesize,
+            fpkey: FPFile.url,
+            mimeType: FPFile.mimetype,
+            originalFilesize: FPFile.size,
             userId: self.attributes.userId,
             attribs: [],
             status: 0
@@ -93,6 +106,11 @@ Website.Models.Page = BaseModel.extend({
           }
           
           model.set(opts);
+          
+          //If this is a testfile, mark it as so
+          if(debug_cb) {
+            model.set('debug',true);
+          }
           
           model.save(null,{
             success:function(savedModel, resp) {

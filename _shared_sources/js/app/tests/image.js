@@ -29,18 +29,19 @@ test("Initialize", 2, function() {
 asyncTest("Save, Update & Delete", 18, function() {
   var image = new Website.Models.Image({
     name:'Test Image',
-    s3key:'baz',
+    fpkey:'baz',
     mimeType:'image/png',
     originalFilesize:9000,
     userId:_image_user.get("id"),
     attribs:[{author:'Tom',year:1991}],
-    status:0
+    status:0,
+    debug:true
   });
   image.save(null,{
     success:function() {
       equal(image.attributes.errors, null, "Save errors: "+JSON.stringify(image.attributes.errors));
       strictEqual(image.attributes.name, "Test Image");
-      strictEqual(image.attributes.s3key, "baz");
+      strictEqual(image.attributes.fpkey, "baz");
       strictEqual(image.attributes.mimeType, "image/png");
       strictEqual(image.attributes.originalFilesize, 9000);
       strictEqual(image.attributes.userId, _image_user.get("id"));
@@ -49,12 +50,13 @@ asyncTest("Save, Update & Delete", 18, function() {
       
       //Perform an edit
       image.set("name","Changed Test Image");
+      image.set("debug",true);
       
       image.save(null,{
         success:function() {
           equal(image.attributes.errors, null, "Save errors: "+JSON.stringify(image.attributes.errors));
           strictEqual(image.attributes.name, "Changed Test Image","Changed image name correctly");
-          strictEqual(image.attributes.s3key, "baz");
+          strictEqual(image.attributes.fpkey, "baz");
           strictEqual(image.attributes.mimeType, "image/png");
           strictEqual(image.attributes.originalFilesize, 9000);
           strictEqual(image.attributes.userId, _image_user.get("id"));
