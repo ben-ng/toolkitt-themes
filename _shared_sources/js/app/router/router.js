@@ -9,6 +9,7 @@ Website.AppRouter = Website.BaseRouter.extend({
     'createPage':'showCreatePage',
     'page/:name/edit':'showEditPage',
     'page/:name/addMedia':'showAddMedia',
+    'page/:pageName/:type/:mediaId':'showMedia',
     'media/:type/:id/edit':'showEditMedia',
     'page/:name':'showPage',
     '':'showIndex'

@@ -3,6 +3,9 @@ Website.Views.EditPage = BaseView.extend({
     if(options.page) {
       this.page = options.page;
     }
+    
+    this.listenTo(this.page.media,'change add remove',this.render,this);
+    this.page.media.fetch();
   },
   events: {
     'submit':'performSave',
@@ -11,10 +14,23 @@ Website.Views.EditPage = BaseView.extend({
   render: function() {
     var self = this;
     
+    var media = [];
+    
+    self.page.media.forEach(function(model) {
+      var attrs = _.clone(model.attributes);
+      attrs.url = Website.s3prefix + attrs.s3key;
+      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      attrs.isImage = attrs.type === 'image';
+      attrs.isVideo = attrs.type === 'video';
+      attrs.editHref = '/media/'+attrs.type+'/'+attrs.id+'/edit';
+      media.push(attrs);
+    });
+    
     Website.loadTemplate(self, 'partials/editPage', function() {
       self.$el.html(self.template(
         _.extend(_.clone(Website.userVars),{
-          page: self.page.attributes
+          page: self.page.attributes,
+          media: media
         })
       ));
       
@@ -23,6 +39,10 @@ Website.Views.EditPage = BaseView.extend({
       if(inputElem.val().replace(/]w/, '') == '') {
         inputElem.val('').focus();
       }
+      
+      self.$('.sortable').sortable().bind('sortupdate', function() {
+        self.readSortOrder.apply(self,arguments);
+      });
     });
     
     return self;
@@ -77,5 +97,30 @@ Website.Views.EditPage = BaseView.extend({
       //noop
       return false;
     }
+  },
+  //Reads the sorting order of items on the page
+  readSortOrder: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    var self = this;
+    
+    var items = self.$('.sortable').children();
+    var models = [];
+    var pageItems = [];
+    items.each(function(index,elem) {
+      var fModel = self.page.media.get($(elem).attr("data-uuid"));
+      models.push(fModel);
+      pageItems.push({
+        ID:fModel.attributes.id,
+        NAME:fModel.attributes.name,
+        TYPE:fModel.attributes.type,
+        THUMB:fModel.attributes.thumbnailS3key
+      });
+    });
+    
+    self.page.media.reset(models);
+    self.page.set("items",pageItems);
+    self.page.save();
   }
 });

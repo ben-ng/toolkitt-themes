@@ -9,14 +9,12 @@ Website.Collections.PageMedia = Backbone.Collection.extend({
   },
   model: function(attrs, options) {
     if (attrs.type === 'image') {
-      delete attrs.type;
       return new Website.Models.Image(attrs, options);
     } else {
-      delete attrs.type;
       return new Website.Models.Video(attrs, options);
     }
   },
   parse: function(data, options) {
-    return data.media;
+    return _.isEmpty(data.media) ? [] : data.media;
   }
 });

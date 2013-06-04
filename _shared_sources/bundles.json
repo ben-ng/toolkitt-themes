@@ -2,7 +2,10 @@
   "js/scripts.js": [
     "js/lib/video.js",
     "js/lib/filepicker.js",
+    "js/lib/modernizr.custom.17475.js",
     "js/lib/jquery.js",
+    "js/lib/jquery.sortable.js",
+    "js/lib/jquery.elastislide.js",
     "js/lib/jquery.mousewheel.js",
     "js/lib/jquery.fancybox.js",
     "js/lib/jquery.fancybox-buttons.js",
@@ -38,6 +41,7 @@
     "js/app/views/navbar.js",
     "js/app/views/header.js",
     "js/app/views/footer.js",
+    "js/app/views/carousel.js",
     "js/app/views/reviewList.js",
     "js/app/views/createPage.js",
     "js/app/views/editPage.js",
@@ -62,6 +66,7 @@
   ],
   "css/styles.css": [
     "css/video-js.css",
+    "css/elastislide.css",
     "css/jquery.fancybox.css",
     "css/jquery.fancybox-buttons.css",
     "css/jquery.fancybox-thumbs.css",

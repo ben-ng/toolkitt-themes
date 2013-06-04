@@ -11,7 +11,8 @@ Website.Models.Media = BaseModel.extend({
     thumbnailFpkey: null,
     attribs: [],
     reviewIssue: null,
-    status: 0
+    status: 0,
+    type: 'unknown',
   },
   sync: function(method, model, options) {
     var self = this;
@@ -133,7 +134,8 @@ Website.Models.Media = BaseModel.extend({
         signature:Website.user.attributes.signature,
         policy:Website.user.attributes.policy,
         width:Website.thumbnailDims.width,
-        height:Website.thumbnailDims.height
+        height:Website.thumbnailDims.height,
+        fit:'scale'
       },
       //Store options
       {
@@ -142,7 +144,8 @@ Website.Models.Media = BaseModel.extend({
         access:'public'
       },
       function(FPFileThumb) {
-        self.save({thumbnailFpkey:FPFileThumb.url},{
+        //Set s3key to null to force a re-stat
+        self.save({thumbnailFpkey:FPFileThumb.url, thumbnailS3key:null},{
           success:function() {
             Website.unprocessed.fetch();
           },

@@ -1,5 +1,12 @@
-<ul>
+<ul class="reelgrid">
 {{#each media}}
-  <li><a href="/page/view/{{id}}"><img src="{{thumbnailUrl}}" alt="{{name}}" /></a></li>
+  <li>
+    <a href="{{playerUrl}}" class="app">
+      <img src="{{thumbnailUrl}}" alt="{{name}}" />
+      <div class="captions">
+        <h2>{{name}}</h2>
+      </div>
+    </a>
+  </li>
 {{/each}}
 </ul>

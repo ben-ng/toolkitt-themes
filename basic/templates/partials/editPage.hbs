@@ -10,4 +10,19 @@
       </div>
     </div>
   </fieldset>
+  <fieldset>
+    <legend>Sort Media</legend>
+    <ul class="mediagrid sortable">
+    {{#each media}}
+      <li class="span4" data-uuid="{{id}}">
+        <div class="relfix">
+          <img src="{{thumbnailUrl}}" alt="{{name}}" class="img-polaroid" />
+          <p class="absfix">
+            <a href="{{editHref}}" class="app btn btn-mini btn-info">Edit</a>
+          </p>
+        </div>
+      </li>
+    {{/each}}
+    </ul>
+  </fieldset>
 </form>

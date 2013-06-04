@@ -15,7 +15,7 @@ var Website = new (BaseView.extend({
   /*videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],*/
   videoExts: ['.mp4', '.m4v', '.f4v', '.webm', '.ogv','.flv'],
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
-  thumbnailDims: {width:180,height:240},
+  thumbnailDims: {width:360,height:203},
   flashMessage:null,
   s3prefix:'http://toolkitt.s3.amazonaws.com/',
   /*
@@ -37,7 +37,14 @@ var Website = new (BaseView.extend({
   events: {
     'click a.app':function(e) {
       e.preventDefault();
-      this.Router.navigate(e.target.pathname, {trigger:true});
+      e.stopPropagation();
+      
+      if(e.target.pathname == null) {
+        this.Router.navigate(e.target.parentElement.pathname, {trigger:true});
+      }
+      else {
+        this.Router.navigate(e.target.pathname, {trigger:true});
+      }
     }
   },
   /*
@@ -67,6 +74,7 @@ var Website = new (BaseView.extend({
     this.user = new Website.Models.User({id:opts.userId});
     this.pages = new Website.Collections.Pages();
     this.unprocessed = new Website.Collections.UnprocessedUploads();
+    this.unprocessed.reset([]);
     
     //The page will have to be rendered if any of these change
     /*
@@ -83,17 +91,6 @@ var Website = new (BaseView.extend({
     this.listenTo(this.unprocessed,'change add remove',forceUpdate,this);
     */
     
-    //The footer and login views are persistant across all pages
-    this.loginView = new Website.Views.Login({
-      user:this.user
-    });
-    this.headerView = new Website.Views.Header({title:'Loading'});
-    this.navbarView = new Website.Views.Navbar({
-      pages:this.pages,
-      unprocessed:this.unprocessed
-    });
-    this.footerView = new Website.Views.Footer();
-    
     //Flash functions
     this.setFlash = function(message,type) {
       if(!type) {
@@ -107,15 +104,36 @@ var Website = new (BaseView.extend({
       self.render();
     };
     
-    //Track history
-    Backbone.history.start();
+    var fetchesToMake = 3;
+    var doneFetch = function() {
+      fetchesToMake--;
+      if(fetchesToMake===0) {
+        //Create essential views
+        //The footer and login views are persistant across all pages
+        self.loginView = new Website.Views.Login({
+          user:self.user
+        });
+        self.headerView = new Website.Views.Header({title:'Loading'});
+        self.navbarView = new Website.Views.Navbar({
+          pages:self.pages,
+          unprocessed:self.unprocessed
+        });
+        self.footerView = new Website.Views.Footer();
+        
+        //Start the app
+        Backbone.history.start();
+      }
+    };
     
     //Fetch initial data
     this.pages.fetch({
       data:{userId:opts.userId},
-      processData:true
+      processData:true,
+      success:doneFetch,
+      error:self.error
     });
-    this.unprocessed.fetch();
+    this.unprocessed.fetch({success:doneFetch,error:self.error});
+    this.user.fetch({success:doneFetch,error:self.error});
   },
   /*
   * Helper function, loads templates
@@ -138,7 +156,6 @@ var Website = new (BaseView.extend({
   * This function will be overwritten by the show____ functions
   */
   render: function() {
-    this.showIndex();
   },
   /*
   * Shows the index page
@@ -309,6 +326,52 @@ var Website = new (BaseView.extend({
     });
   },
   /*
+  * Shows the media page
+  */
+  showMedia: function(pageName,type,mediaId) {
+    this.headerView.title = "Media Player";
+    
+    //Find the page in the navbar collection
+    pageName = decodeURIComponent(pageName);
+    type = decodeURIComponent(type);
+    mediaId = decodeURIComponent(mediaId);
+    var media;
+    
+    var pages = Website.pages.where({name:pageName});
+    var page;
+    
+    if(pages.length) {
+      page = pages[0];
+    }
+    else {
+      page = new Website.Models.Page({name:'Page not found'});
+    }
+    
+    if(type==='video') {
+      media = new Website.Models.Video({id:mediaId})
+    }
+    else {
+      media = new Website.Models.Image({id:mediaId})
+    }
+    
+    var carouselView = new Website.Views.Carousel({
+      page:page
+    });
+    
+    var mediaPreview = new Website.Views.Media({
+      media:media
+    });
+    
+    media.fetch();
+    
+    this.performAction('mediaPlayer',function() {
+        //Darken page
+        $('body').addClass('dark');
+        this.assign(carouselView, '#carouselWrapper');
+        this.assign(mediaPreview, '#preview');
+    });
+  },
+  /*
   * Shows the upload review page page
   */
   showReview: function(name) {
@@ -348,11 +411,18 @@ var Website = new (BaseView.extend({
       
       self.render = function() {
         self.$el.html(template(self.userVars)).hide();
+        //Whiten page
+        $('body').removeClass('dark');
+        
         cb.apply(self);
         self.$el.show();
         return this;
       }
       self.render();
     });
+  },
+  error: function(model, err) {
+    console.log(model);
+    console.log(err);
   }
 }))({el:document.body});
