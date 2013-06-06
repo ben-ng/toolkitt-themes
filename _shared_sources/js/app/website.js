@@ -13,7 +13,7 @@ var Website = new (BaseView.extend({
   * Valid file extensions and other constants
   */
   /*videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],*/
-  videoExts: ['.mp4', '.m4v', '.f4v', '.webm', '.ogv','.flv'],
+  videoExts: ['.mp4', '.m4v', '.f4v', '.webm', '.ogv','.flv','.mov'],
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
   thumbnailDims: {width:360,height:203},
   flashMessage:null,

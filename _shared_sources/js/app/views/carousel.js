@@ -14,12 +14,27 @@ Website.Views.Carousel = BaseView.extend({
     'click a.bigClose':'exitPlayer',
     'click a.reelToggle':'toggleReel'
   },
-  toggleReel: function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  toggleReel: function(e, toggle) {
+    var self = this;
     
-    this.reelOpen = !this.reelOpen;
-    this.render();
+    if(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    if(toggle !== false) {
+      self.reelOpen = !self.reelOpen;
+    }
+    
+    //Hide carousel?
+    if(self.reelOpen) {
+      self.$('.sliderWrap').slideDown(400);
+      self.$('.symbol').html('&and;');
+    }
+    else {
+      self.$('.sliderWrap').slideUp(400);
+      self.$('.symbol').html('&or;');
+    }
   },
   exitPlayer: function(e) {
     e.preventDefault();
@@ -54,15 +69,7 @@ Website.Views.Carousel = BaseView.extend({
       //Activate carousel
       self.$('.carousel').elastislide();
       
-      //Hide carousel?
-      if(self.reelOpen) {
-        self.$('.sliderWrap').slideDown(400);
-        self.$('.symbol').html('&or;');
-      }
-      else {
-        self.$('.sliderWrap').slideUp(400);
-        self.$('.symbol').html('&and;');
-      }
+      self.toggleReel(null,false);
     });
     
     return self;
