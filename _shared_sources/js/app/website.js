@@ -15,9 +15,20 @@ var Website = new (BaseView.extend({
   /*videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],*/
   videoExts: ['.mp4', '.m4v', '.f4v', '.webm', '.ogv','.flv','.mov'],
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
-  thumbnailDims: {width:360,height:203},
+  thumbnailDims: {width:340,height:192},
   flashMessage:null,
   s3prefix:'http://toolkitt.s3.amazonaws.com/',
+  placeholderThumbnail: function(halfSize) {
+    var w = this.thumbnailDims.width;
+    var h = this.thumbnailDims.height;
+    
+    if(halfSize) {
+      w=Math.round(w/2);
+      h=Math.round(h/2);
+    }
+    
+    return 'http://holder.js/'+w+'x'+h+'/text:No Thumbnail';
+  },
   /*
   * Utils
   */
@@ -39,12 +50,13 @@ var Website = new (BaseView.extend({
       e.preventDefault();
       e.stopPropagation();
       
-      if(e.target.pathname == null) {
-        this.Router.navigate(e.target.parentElement.pathname, {trigger:true});
+      var target = e.target;
+      
+      while(target.pathname == null) {
+        target = target.parentElement;
       }
-      else {
-        this.Router.navigate(e.target.pathname, {trigger:true});
-      }
+      
+      this.Router.navigate(target.pathname, {trigger:true});
     }
   },
   /*
@@ -108,7 +120,14 @@ var Website = new (BaseView.extend({
     var doneFetch = function() {
       fetchesToMake--;
       if(fetchesToMake===0) {
+        //Update the isLoggedIn template variable
+        Website.userVars = _.extend(Website.userVars,{
+          isLoggedIn: self.isLoggedIn(),
+          user: self.user.attributes
+        });
+        
         //Create essential views
+        
         //The footer and login views are persistant across all pages
         self.loginView = new Website.Views.Login({
           user:self.user
@@ -424,5 +443,29 @@ var Website = new (BaseView.extend({
   error: function(model, err) {
     console.log(model);
     console.log(err);
+    var errToShow = err || model;
+    var buff = "";
+    
+    if(errToShow == null) {
+      errToShow = "Unknown (Null) Error";
+    }
+    
+    if(typeof errToShow === 'object') {
+      buff = [];
+      
+      for(var key in errToShow) {
+        buff.push(key + ": " + errToShow[key]);
+      }
+      
+      buff = buff.join(",");
+    }
+    else {
+      buff += errToShow;
+    }
+    
+    Website.setFlash("Error: "+buff,"error");
+  },
+  isLoggedIn: function() {
+    return this.user.attributes.token ? true:false;
   }
 }))({el:document.body});

@@ -52,7 +52,15 @@ Website.Views.Carousel = BaseView.extend({
       var attrs = _.clone(model.attributes);
       attrs.url = Website.s3prefix + attrs.s3key;
       attrs.playerUrl = 'page/'+safeName+'/'+model.attributes.type+'/'+model.attributes.id;
-      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      
+      if(attrs.thumbnailS3key) {
+        attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      }
+      else {
+        //Halfsized with the true option
+        attrs.thumbnailUrl = Website.placeholderThumbnail(true);
+      }
+      
       attrs.isImage = attrs.type === 'image';
       attrs.isVideo = attrs.type === 'video';
       media.push(attrs);
@@ -68,6 +76,8 @@ Website.Views.Carousel = BaseView.extend({
       
       //Activate carousel
       self.$('.carousel').elastislide();
+      
+      Holder.run();
       
       self.toggleReel(null,false);
     });

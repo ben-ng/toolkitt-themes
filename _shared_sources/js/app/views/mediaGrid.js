@@ -17,8 +17,15 @@ Website.Views.MediaGrid = BaseView.extend({
     self.page.media.forEach(function(model) {
       var attrs = _.clone(model.attributes);
       attrs.url = Website.s3prefix + attrs.s3key;
-      attrs.playerUrl = 'page/'+safeName+'/'+model.attributes.type+'/'+model.attributes.id;
-      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      attrs.playerUrl = 'page/'+safeName+'/'+attrs.type+'/'+attrs.id;
+      
+      if(attrs.thumbnailS3key) {
+        attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      }
+      else {
+        attrs.thumbnailUrl = Website.placeholderThumbnail();
+      }
+      
       attrs.isImage = attrs.type === 'image';
       attrs.isVideo = attrs.type === 'video';
       media.push(attrs);
@@ -31,6 +38,9 @@ Website.Views.MediaGrid = BaseView.extend({
           page:self.page.attributes
         })
       ));
+      
+      //Create any placeholders
+      Holder.run();
     });
     
     return self;

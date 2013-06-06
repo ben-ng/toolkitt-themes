@@ -19,7 +19,15 @@ Website.Views.EditPage = BaseView.extend({
     self.page.media.forEach(function(model) {
       var attrs = _.clone(model.attributes);
       attrs.url = Website.s3prefix + attrs.s3key;
-      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      
+      if(attrs.thumbnailS3key) {
+        attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      }
+      else {
+        //Halfsized with the true option
+        attrs.thumbnailUrl = Website.placeholderThumbnail();
+      }
+      
       attrs.isImage = attrs.type === 'image';
       attrs.isVideo = attrs.type === 'video';
       attrs.editHref = '/media/'+attrs.type+'/'+attrs.id+'/edit';
@@ -43,6 +51,8 @@ Website.Views.EditPage = BaseView.extend({
       self.$('.sortable').sortable().bind('sortupdate', function() {
         self.readSortOrder.apply(self,arguments);
       });
+      
+      Holder.run();
     });
     
     return self;

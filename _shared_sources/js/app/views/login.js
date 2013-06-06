@@ -19,7 +19,7 @@ Website.Views.Login = BaseView.extend({
     Website.loadTemplate(self, 'partials/login', function() {
       //Update the isLoggedIn template variable
       Website.userVars = _.extend(Website.userVars,{
-        isLoggedIn: self.isLoggedIn(),
+        isLoggedIn: Website.isLoggedIn(),
         user: self.user.attributes
       });
       
@@ -36,8 +36,5 @@ Website.Views.Login = BaseView.extend({
     var password = this.$('input[name=password]').val();
     
     this.user.save({username:username,password:password});
-  },
-  isLoggedIn: function() {
-    return this.user.attributes.token ? true:false;
   }
 });

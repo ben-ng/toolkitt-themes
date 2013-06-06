@@ -109,8 +109,7 @@ Website.Models.Media = BaseModel.extend({
         'GOOGLE_DRIVE',
         'FTP',
         'URL',
-        'IMAGE_SEARCH',
-        'WEBCAM'
+        'IMAGE_SEARCH'
       ]
     },
     function(FPFile) {
@@ -127,7 +126,8 @@ Website.Models.Media = BaseModel.extend({
     if(!FPFile) {
       FPFile = self.fpfile();
     }
-  
+    
+    Website.setFlash("Please wait while we process the image...","info");
     filepicker.convert(FPFile,
       //Convert options
       {
@@ -135,7 +135,7 @@ Website.Models.Media = BaseModel.extend({
         policy:Website.user.attributes.policy,
         width:Website.thumbnailDims.width,
         height:Website.thumbnailDims.height,
-        fit:'scale'
+        fit:'crop'
       },
       //Store options
       {
@@ -147,6 +147,7 @@ Website.Models.Media = BaseModel.extend({
         //Set s3key to null to force a re-stat
         self.save({thumbnailFpkey:FPFileThumb.url, thumbnailS3key:null},{
           success:function() {
+            Website.setFlash("Thumbnail Saved!", "success");
             Website.unprocessed.fetch();
           },
           error: function(err) {

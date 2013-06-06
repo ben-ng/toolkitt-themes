@@ -18,7 +18,15 @@ Website.Views.EditMedia = BaseView.extend({
     var self = this;
     var attrs = _.clone(self.media.attributes);
     attrs.url = Website.s3prefix + attrs.s3key;
-    attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+      
+    if(attrs.thumbnailS3key) {
+      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+    }
+    else {
+      //Halfsized with the true option
+      attrs.thumbnailUrl = Website.placeholderThumbnail();
+    }
+    
     attrs.isImage = attrs.type === 'image';
     attrs.isVideo = attrs.type === 'video';
     
@@ -34,6 +42,8 @@ Website.Views.EditMedia = BaseView.extend({
       if(inputElem.val().replace(/]w/, '') == '') {
         inputElem.val('').focus();
       }
+      
+      Holder.run();
     });
     
     return self;
