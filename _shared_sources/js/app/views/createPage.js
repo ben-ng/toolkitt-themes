@@ -42,14 +42,10 @@ Website.Views.CreatePage = BaseView.extend({
           success:function() {
             Website.Router.navigate('page/'+name,{trigger:true});
           },
-          error:function(err) {
-            alert(err);
-          }
+          error: Website.handleError
         });
       },
-      error:function(err) {
-        alert(err);
-      }
+      error: Website.handleError
     });
   }
 });

@@ -1,4 +1,5 @@
 Website.Collections.UnprocessedUploads = Backbone.Collection.extend({
+  name:'media',
   url: TK.baseURL+'/unprocessed.json',
   model: function(attrs, options) {
     if (attrs.type === 'image') {

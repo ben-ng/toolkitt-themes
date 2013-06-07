@@ -21,9 +21,28 @@
       var proxiedSuccess = options.success;
       
       options.success = function(data, textStatus, jqXHR) {
-        if(data.error) {
+        if(data[model.name] && data[model.name].errors) {
           if(options.error) {
-            options.error(data.error, textStatus, jqXHR);
+            var sendToErrorhandler = function() {
+              options.error({responseText:JSON.stringify({errors:data[model.name].errors})});
+            };
+            
+            //If there was an error, we need to restore the last known "good" state of the model
+            
+            //Avoid going into an infinite loop if read produces an error
+            if(method !== "read") {
+              model.fetch({
+                success: function() {
+                  sendToErrorhandler();
+                },
+                error: function() {
+                  sendToErrorhandler();
+                }
+              });
+            }
+            else {
+              sendToErrorhandler();
+            }
           }
         }
         else {

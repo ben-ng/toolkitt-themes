@@ -1,4 +1,5 @@
 Website.Collections.PageMedia = Backbone.Collection.extend({
+  name:'media',
   initialize: function(opts) {
     if(opts.page) {
       this.page = opts.page;

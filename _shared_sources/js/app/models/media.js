@@ -1,4 +1,5 @@
 Website.Models.Media = BaseModel.extend({
+  name:'media',
   urlRoot:TK.baseURL+'/Media_is_an_abstract_class_do_not_use_it',
   defaults:{
     name: 'Untitled',
@@ -117,7 +118,7 @@ Website.Models.Media = BaseModel.extend({
       self.cropThumbnail(FPFile);
     },
     function(FPError) {
-      console.log(FPError);
+      Website.error(FPError);
     });
   },
   cropThumbnail: function(FPFile) {
@@ -150,13 +151,11 @@ Website.Models.Media = BaseModel.extend({
             Website.setFlash("Thumbnail Saved!", "success");
             Website.unprocessed.fetch();
           },
-          error: function(err) {
-            console.log(err);
-          }
+          error: Website.handleError
         });
       },
       function(FPError) {
-        console.log(FPError);
+        Website.error(FPError);
       }
     );
   },

@@ -4,6 +4,12 @@ Website.Views.EditPage = BaseView.extend({
       this.page = options.page;
     }
     
+    this.listenTo(this.page,'invalid',function(model,err) {
+      //Restore the previous state of the model
+      model.fetch();
+      Website.error(err);
+    },this);
+    
     this.listenTo(this.page.media,'change add remove',this.render,this);
     this.page.media.fetch();
   },
@@ -72,16 +78,12 @@ Website.Views.EditPage = BaseView.extend({
       success:function() {
         Website.navbarView.pages.fetch({
           success:function() {
-            Website.Router.navigate('page/'+name,{trigger:true});
+            Website.setFlash("Page saved!","success");
           },
-          error:function(err) {
-            alert(err);
-          }
+          error: Website.handleError
         });
       },
-      error:function(err) {
-        alert(err);
-      }
+      error: Website.handleError
     });
   },
   //Tries to delete the page
@@ -98,9 +100,7 @@ Website.Views.EditPage = BaseView.extend({
           //Return to home
           Website.Router.navigate('',{trigger:true});
         },
-        error:function(err) {
-          alert(err);
-        }
+        error: Website.handleError
       });
     }
     else {
@@ -131,6 +131,11 @@ Website.Views.EditPage = BaseView.extend({
     
     self.page.media.reset(models);
     self.page.set("items",pageItems);
-    self.page.save();
+    self.page.save({},{
+      success:function() {
+        Website.setFlash("Page saved!","success");
+      },
+      error:Website.handleError
+    });
   }
 });

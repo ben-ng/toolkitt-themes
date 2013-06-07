@@ -109,11 +109,16 @@ var Website = new (BaseView.extend({
         type='info';
       }
       self.flash = {message: message, type: type};
-      self.render();
+      self.headerView.render();
+      
+      //Clear the flash on the next route change
+      self.listenToOnce(self.Router,"route",function(route, router, params) {
+        self.clearFlash();
+      });
     };
     this.clearFlash = function() {
       self.flash=null;
-      self.render();
+      self.headerView.render();
     };
     
     var fetchesToMake = 3;
@@ -151,8 +156,8 @@ var Website = new (BaseView.extend({
       success:doneFetch,
       error:self.error
     });
-    this.unprocessed.fetch({success:doneFetch,error:self.error});
-    this.user.fetch({success:doneFetch,error:self.error});
+    this.unprocessed.fetch({success:doneFetch,error:self.handleError});
+    this.user.fetch({success:doneFetch,error:self.handleError});
   },
   /*
   * Helper function, loads templates
@@ -440,10 +445,10 @@ var Website = new (BaseView.extend({
       self.render();
     });
   },
-  error: function(model, err) {
-    console.log(model);
+  error: function(err) {
     console.log(err);
-    var errToShow = err || model;
+    
+    var errToShow = err;
     var buff = "";
     
     if(errToShow == null) {
@@ -453,8 +458,15 @@ var Website = new (BaseView.extend({
     if(typeof errToShow === 'object') {
       buff = [];
       
-      for(var key in errToShow) {
-        buff.push(key + ": " + errToShow[key]);
+      if(errToShow.length) {
+        for(var i=0, ii=errToShow.length; i<ii; i++) {
+          buff.push(errToShow[i].attr + ": " + errToShow[i].message);
+        }
+      }
+      else {
+        for(var key in errToShow) {
+          buff.push(key + ": " + errToShow[key]);
+        }
       }
       
       buff = buff.join(",");
@@ -464,6 +476,11 @@ var Website = new (BaseView.extend({
     }
     
     Website.setFlash("Error: "+buff,"error");
+  },
+  handleError: function(model, xhr, options) {
+    var errors = JSON.parse(xhr.responseText).errors;
+    
+    Website.error(errors);
   },
   isLoggedIn: function() {
     return this.user.attributes.token ? true:false;

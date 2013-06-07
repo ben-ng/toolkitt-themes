@@ -63,16 +63,15 @@ Website.Views.EditMedia = BaseView.extend({
       success:function() {
         Website.unprocessed.fetch({
           success:function() {
-            Website.setFlash("Saved!","success");
+            var ucedType = self.media.attributes.type.charAt(0).toUpperCase()
+            ucedType += self.media.attributes.type.substr(1);
+            
+            Website.setFlash(ucedType +" Saved!", "success");
           },
-          error:function(err) {
-            Website.setFlash("Error: "+err,"error");
-          }
+          error: Website.handleError
         });
       },
-      error:function(err) {
-        alert(err);
-      }
+      error: Website.handleError
     });
   },
   //Tries to delete the media
@@ -93,13 +92,11 @@ Website.Views.EditMedia = BaseView.extend({
             //Return to home
             Website.Router.navigate('',{trigger:true});
           },
-          error:function(err) {
-            alert(err);
-          }
+          error: Website.handleError
         }); 
       },
       function(err) {
-        console.log(err);
+        Website.error(err);
       });
     }
     else {

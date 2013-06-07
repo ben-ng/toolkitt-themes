@@ -1,10 +1,29 @@
 Website.Models.Page = BaseModel.extend({
+  name:'page',
   urlRoot:TK.baseURL+'/pages',
   defaults: {
     name:'Untitled',
     items:[],
     userId:'',
     errors:null
+  },
+  validate: function(attrs,options) {
+    var errors = [];
+    
+    if(!attrs.name || attrs.name.length == 0) {
+      errors.push({attr:"name",message:"Page title cannot be empty"});
+    }
+    
+    if(!attrs.id) {
+      //Check for duplicate page
+      if(Website.pages.findWhere({name:attrs.name}).length > 0) {
+        errors.push({attr:"name",message:"Another page already exists with this name"});
+      }
+    }
+    
+    if(errors.length) {
+      return errors;
+    }
   },
   sync: function(method, model, options) {
     if(method === 'create' || method === 'update') {
@@ -74,9 +93,7 @@ Website.Models.Page = BaseModel.extend({
               Website.unprocessed.fetch();
               after_save_cb();
             },
-            error:function(err) {
-              alert(err);
-            }
+            error: Website.handleError
           });
         }
       };
@@ -124,15 +141,13 @@ Website.Models.Page = BaseModel.extend({
               }
               afterItemCompete(savedModel.attributes.id, savedModel.attributes.name, type, after_cb);
             },
-            error:function(err,resp) {
-              alert(JSON.stringify(resp));
-            }
+            error: Website.handleError
           });
         })(FPFiles[i]);
       }
     },
     function(FPError) {
-      console.log(FPError);
+      Website.error(FPError);
     });
   }
 });

@@ -28,6 +28,13 @@ Website.Views.Header = BaseView.extend({
         }
       )));
       
+      //Dim the flash view(s?)
+      var flashes = self.$(".alert");
+      flashes.each(function(index,elem) {
+        //Fade to white
+        $(elem).animate({backgroundColor:"#FFF",1000);
+      });
+      
       self.assign(Website.navbarView, '#navbar');
     });
     return self;

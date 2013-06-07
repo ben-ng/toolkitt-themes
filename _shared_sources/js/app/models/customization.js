@@ -1,4 +1,5 @@
 Website.Models.Customization = Backbone.Model.extend({
+  name:'customization',
   urlRoot:TK.baseURL+'/Customizations/',
   methodUrl: function(method) {
     if(method == "delete"){
