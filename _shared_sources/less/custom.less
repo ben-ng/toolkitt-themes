@@ -55,15 +55,23 @@ ul.mediagrid li {
   height: 203px;
   margin: 0;
 }
-ul.mediagrid .relfix {
+ul.carousel .relfix,
+ul.mediagrid .relfix,
+ul.reelgrid .relfix {
   position: relative;
   z-index: 1;
 }
-ul.mediagrid .absfix {
+ul.carousel .absfix,
+ul.mediagrid .absfix,
+ul.reelgrid .absfix {
   position: absolute;
   top:10px;
   left:10px;
   z-index: 999;
+}
+ul.carousel .absfix {
+  top:2px;
+  left:2px;
 }
 /* Reel grid */
 ul.reelgrid li {
@@ -84,9 +92,6 @@ ul.reelgrid li:hover {
 }
 ul.reelgrid h2 {
   font-size: 24px;
-  color: #000;
-}
-ul.reelgrid a {
   color: #000;
 }
 /* The big close button */
@@ -164,6 +169,10 @@ a.carouselControl.reelToggle small {
 	.elastislide-horizontal {
 		padding: 10px 40px;
 	}
+}
+/* Micro buttons */
+.btn.btn-micro {
+  padding:4px 6px;
 }
 /* Bottom Menu */
 .bottom-menu {

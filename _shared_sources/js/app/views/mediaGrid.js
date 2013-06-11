@@ -3,10 +3,23 @@ Website.Views.MediaGrid = BaseView.extend({
     //Fetch the page
     if(options.page) {
       this.page = options.page;
+      
+      if(this.page.media) {
+        this.listenTo(this.page.media,'change add remove',this.render,this);
+        this.page.media.fetch();
+      }
+      else {
+        this.page.media = new Website.Collections.PageMedia({
+          page: this.page
+        });
+      }
     }
-    
-    this.listenTo(this.page.media,'change add remove',this.render,this);
-    this.page.media.fetch();
+    else {
+      this.page = new Website.Models.Page({
+        name:'Page not found'
+      });
+      this.page.media = new Website.Collections.PageMedia();
+    }
   },
   render: function() {
     var self = this;
@@ -28,6 +41,11 @@ Website.Views.MediaGrid = BaseView.extend({
       
       attrs.isImage = attrs.type === 'image';
       attrs.isVideo = attrs.type === 'video';
+      
+      if(Website.isLoggedIn()) {
+        attrs.editHref = '/media/'+attrs.type+'/'+attrs.id+'/edit';
+      }
+      
       media.push(attrs);
     });
     

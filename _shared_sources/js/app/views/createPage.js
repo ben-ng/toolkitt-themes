@@ -2,6 +2,12 @@ Website.Views.CreatePage = BaseView.extend({
   initialize: function(options) {
     //Initialize an empty user
     this.model = new Website.Models.Page({name:''});
+    
+    this.listenTo(this.model,'invalid',function(model,err) {
+      //Restore the previous state of the model
+      model.fetch();
+      Website.error(err);
+    },this);
   },
   events: {
     'submit':'performSave'

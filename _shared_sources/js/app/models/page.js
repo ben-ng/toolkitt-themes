@@ -7,6 +7,11 @@ Website.Models.Page = BaseModel.extend({
     userId:'',
     errors:null
   },
+  initialize: function(opts) {
+    if(opts.name) {
+      this.set("name",opts.name);
+    }
+  },
   validate: function(attrs,options) {
     var errors = [];
     
@@ -16,7 +21,8 @@ Website.Models.Page = BaseModel.extend({
     
     if(!attrs.id) {
       //Check for duplicate page
-      if(Website.pages.findWhere({name:attrs.name}).length > 0) {
+      var pages = Website.pages.findWhere({name:attrs.name});
+      if(pages && pages.length > 0) {
         errors.push({attr:"name",message:"Another page already exists with this name"});
       }
     }

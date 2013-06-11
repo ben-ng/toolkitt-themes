@@ -61,6 +61,10 @@ Website.Views.Carousel = BaseView.extend({
         attrs.thumbnailUrl = Website.placeholderThumbnail(true);
       }
       
+      if(Website.isLoggedIn()) {
+        attrs.editHref = '/media/'+attrs.type+'/'+attrs.id+'/edit';
+      }
+      
       attrs.isImage = attrs.type === 'image';
       attrs.isVideo = attrs.type === 'video';
       media.push(attrs);

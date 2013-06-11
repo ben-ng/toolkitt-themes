@@ -2,9 +2,16 @@
   <ul class="carousel elastislide-list">
   {{#each media}}
     <li>
-      <a href="{{playerUrl}}" class="app">
-        <img src="{{thumbnailUrl}}" alt="{{name}}" />
-      </a>
+      <div class="relfix">
+        <a href="{{playerUrl}}" class="app">
+          <img src="{{thumbnailUrl}}" alt="{{name}}" />
+        </a>
+        {{#if editHref}}
+          <p class="absfix">
+            <a href="{{editHref}}" class="app btn btn-micro btn-info">Edit</a>
+          </p>
+        {{/if}}
+      </div>
     </li>
   {{/each}}
   </ul>

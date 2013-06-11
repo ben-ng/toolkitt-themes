@@ -40,6 +40,10 @@ var Website = new (BaseView.extend({
     isImage:function(filename) {
       var ext = '.'+filename.split('.').pop();
       return Website.imageExts.indexOf(ext)>=0;
+    },
+    ucfirst:function(str) {
+      var s = str.charAt(0).toUpperCase();
+      return s + str.substr(1);
     }
   },
   /*
@@ -458,14 +462,26 @@ var Website = new (BaseView.extend({
     if(typeof errToShow === 'object') {
       buff = [];
       
-      if(errToShow.length) {
+      /*
+      * Error arrays come in the format
+      * [{attr:<String>,message:<String>}, ...]
+      */
+      if(errToShow instanceof Array) {
         for(var i=0, ii=errToShow.length; i<ii; i++) {
-          buff.push(errToShow[i].attr + ": " + errToShow[i].message);
+          buff.push(Website.util.ucfirst(errToShow[i].attr) 
+                  + ": " 
+                  + Website.util.ucfirst(errToShow[i].message));
         }
       }
+      /*
+      * Error objects come in the format
+      * {attr:<message String>, ...}
+      */
       else {
         for(var key in errToShow) {
-          buff.push(key + ": " + errToShow[key]);
+          buff.push(Website.util.ucfirst(key) 
+                  + ": " 
+                  + Website.util.ucfirst(errToShow[key]));
         }
       }
       
