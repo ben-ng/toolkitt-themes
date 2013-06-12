@@ -45,6 +45,8 @@ Website.Views.EditMedia = BaseView.extend({
     
     Holder.run();
     
+    Website.loadGuider();
+    
     return this;
   },
   //Tries to save the edited media
