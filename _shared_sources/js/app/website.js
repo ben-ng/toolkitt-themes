@@ -494,6 +494,11 @@ var Website = new (BaseView.extend({
   * Loads the correct guider
   */
   loadGuider: function() {
+    //Don't do anything if not yet logged in
+    if(!Website.isLoggedIn()) {
+      return false;
+    }
+  
     var path = Backbone.history.fragment;
     var foundGuider = false;
     
