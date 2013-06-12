@@ -18,7 +18,15 @@ Website.Views.EditMedia = BaseView.extend({
   },
   render: function() {
     var attrs = _.clone(this.media.attributes);
-    attrs.url = Website.s3prefix + attrs.s3key;
+    var ready = true;
+    
+    if(attrs.s3key) {
+      attrs.url = Website.s3prefix + attrs.s3key;
+    }
+    else {
+      attrs.thumbnailUrl = Website.placeholderThumbnail();
+      ready = false;
+    }
       
     if(attrs.thumbnailS3key) {
       attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
@@ -45,7 +53,23 @@ Website.Views.EditMedia = BaseView.extend({
     
     Holder.run();
     
-    Website.loadGuider();
+    //Only show this guider once
+    if(ready) {
+      if($.cookie('guider_thumbnailImage')) {
+        return false;
+      }
+      else {
+        $.cookie('guider_thumbnailImage','true',{expires:99999});
+        
+        if(attrs.isImage) {
+          Website.loadGuider("thumbnailImage");
+        }
+        else {
+          Website.loadGuider("thumbnailImageCustom");
+        }
+        return true;
+      }
+    }
     
     return this;
   },

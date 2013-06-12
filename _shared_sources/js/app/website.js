@@ -64,30 +64,6 @@ var Website = new (BaseView.extend({
       }
       
       return false;
-    },
-    'thumbnailImage': function(fragment) {
-      //Only show this OR the video guider once
-      if($.cookie('guider_thumbnailImage')) {
-        return false;
-      }
-      else if(fragment.match(/^media\/image\/[^\/]+\/edit$/)) {
-        $.cookie('guider_thumbnailImage','true',{expires:99999});
-        return true;
-      }
-      
-      return false;
-    },
-    'thumbnailImageCustom': function(fragment) {
-      //Only show this OR the image guider once
-      if($.cookie('guider_thumbnailImage')) {
-        return false;
-      }
-      else if(fragment.match(/^media\/video\/[^\/]+\/edit$/)) {
-        $.cookie('guider_thumbnailImage','true',{expires:99999});
-        return true;
-      }
-      
-      return false;
     }
   },
   /*
