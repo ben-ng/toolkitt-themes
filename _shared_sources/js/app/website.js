@@ -12,12 +12,14 @@ var Website = new (BaseView.extend({
   /*
   * Valid file extensions and other constants
   */
-  /*videoExts: ['.mp4', '.flv', '.mkv', '.webm', '.wmv', '.mov', '.f4v', '.3gp', '.avi'],*/
   videoExts: ['.mp4', '.m4v', '.f4v', '.webm', '.ogv','.flv','.mov'],
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
   thumbnailDims: {width:340,height:192},
   flashMessage:null,
   s3prefix:'http://toolkitt.s3.amazonaws.com/',
+  /*
+  * Creates a holder.js URL to use as a placeholder thumbnail
+  */
   placeholderThumbnail: function(halfSize) {
     var w = this.thumbnailDims.width;
     var h = this.thumbnailDims.height;
@@ -28,6 +30,65 @@ var Website = new (BaseView.extend({
     }
     
     return 'http://holder.js/'+w+'x'+h+'/text:No Thumbnail';
+  },
+  /*
+  * Guider rules
+  * The function should return true if the guider should be shown
+  * Only the first matching guider will be shown
+  */
+  guiders: {
+    'index': function(fragment) {
+      return fragment === '' && Website.pages.length == 0;
+    },
+    'createPage': function(fragment) {
+      return fragment === 'createPage' && Website.pages.length == 0;
+    },
+    'addMedia': function(fragment) {
+      var pageName = fragment.split('/')[1];
+      var page = Website.pages.findWhere({name:pageName});
+      return fragment.match(/^page\/[^\/]+$/) && page && page.media && page.media.length === 0;
+    },
+    'uploadFile': function(fragment) {
+      var pageName = fragment.split('/')[1];
+      var page = Website.pages.findWhere({name:pageName});
+      return fragment.match(/^page\/[^\/]+\/addMedia$/) && page && page.media && page.media.length === 0;
+    },
+    'reviewFile': function(fragment) {
+      //Only show this guider once
+      if($.cookie('guider_reviewFile')) {
+        return false;
+      }
+      else if(fragment === 'review') {
+        $.cookie('guider_reviewFile','true',{expires:99999});
+        return true;
+      }
+      
+      return false;
+    },
+    'thumbnailImage': function(fragment) {
+      //Only show this OR the video guider once
+      if($.cookie('guider_thumbnailImage')) {
+        return false;
+      }
+      else if(fragment.match(/^media\/image\/[^\/]+\/edit$/)) {
+        $.cookie('guider_thumbnailImage','true',{expires:99999});
+        return true;
+      }
+      
+      return false;
+    },
+    'thumbnailImageCustom': function(fragment) {
+      //Only show this OR the image guider once
+      if($.cookie('guider_thumbnailImage')) {
+        return false;
+      }
+      else if(fragment.match(/^media\/video\/[^\/]+\/edit$/)) {
+        $.cookie('guider_thumbnailImage','true',{expires:99999});
+        return true;
+      }
+      
+      return false;
+    }
   },
   /*
   * Utils
@@ -90,7 +151,6 @@ var Website = new (BaseView.extend({
     this.user = new Website.Models.User({id:opts.userId});
     this.pages = new Website.Collections.Pages();
     this.unprocessed = new Website.Collections.UnprocessedUploads();
-    this.unprocessed.reset([]);
     
     //The page will have to be rendered if any of these change
     /*
@@ -162,23 +222,6 @@ var Website = new (BaseView.extend({
     });
     this.unprocessed.fetch({success:doneFetch,error:self.handleError});
     this.user.fetch({success:doneFetch,error:self.handleError});
-  },
-  /*
-  * Helper function, loads templates
-  */
-  loadTemplate:function(obj, route,cb ) {
-    $.ajax({
-        url: '/templates/' + route + '.hbs',
-        cache: false,
-        success: function(data) {
-            source    = data;
-            obj.template  = Handlebars.compile(source);
-            
-            if(cb) {
-              cb(null,obj.template);
-            }
-        }
-    });
   },
   /*
   * This function will be overwritten by the show____ functions
@@ -432,22 +475,49 @@ var Website = new (BaseView.extend({
   performAction: function(layout,cb) {
     var self = this;
     
-    this.loadTemplate(this,'layouts/'+layout,function(err, template) {
-      if(err) {
-        alert(err);
-      }
+    self.render = function() {
+      self.$el.html(window.JST[layout](self.userVars)).hide();
       
-      self.render = function() {
-        self.$el.html(template(self.userVars)).hide();
-        //Whiten page
-        $('body').removeClass('dark');
-        
-        cb.apply(self);
-        self.$el.show();
-        return this;
+      //Whiten page
+      $('body').removeClass('dark');
+      
+      cb.apply(self);
+      self.$el.show();
+      
+      self.loadGuider();
+      
+      return this;
+    }
+    self.render();
+  },
+  /*
+  * Loads the correct guider
+  */
+  loadGuider: function() {
+    var path = Backbone.history.fragment;
+    var foundGuider = false;
+    
+    //Loop through guiders and find the matching one
+    for(var guiderId in this.guiders) {
+      if(this.guiders[guiderId](path)) {
+        foundGuider = guiderId;
+        break;
       }
-      self.render();
-    });
+    }
+    
+    if(foundGuider) {
+      //Prevents the annoying flash
+      if(guiders._currentGuiderID !== foundGuider) {
+        this.hideGuiders();
+      }
+      guiders.show(foundGuider);
+    }
+    else {
+      this.hideGuiders();
+    }
+  },
+  hideGuiders: function() {
+    guiders.hideAll();
   },
   error: function(err) {
     console.log(err);
@@ -472,6 +542,10 @@ var Website = new (BaseView.extend({
                   + ": " 
                   + Website.util.ucfirst(errToShow[i].message));
         }
+      }
+      //Probably a filepicker error then
+      else if(errToShow.toString) {
+        buff = [errToShow.toString()];
       }
       /*
       * Error objects come in the format
@@ -501,4 +575,4 @@ var Website = new (BaseView.extend({
   isLoggedIn: function() {
     return this.user.attributes.token ? true:false;
   }
-}))({el:document.body});
+}))({el:document.getElementById("app")});

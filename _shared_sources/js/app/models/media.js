@@ -118,7 +118,9 @@ Website.Models.Media = BaseModel.extend({
       self.cropThumbnail(FPFile);
     },
     function(FPError) {
-      Website.error(FPError);
+      if(FPError.code !== 101) {
+        Website.error(FPError);
+      }
     });
   },
   cropThumbnail: function(FPFile) {

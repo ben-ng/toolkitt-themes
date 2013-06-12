@@ -3,7 +3,7 @@
     <fieldset>
       <legend>Edit {{name}}</legend>
       <label class="control-label" for="name">Title</label>
-      <input type="text" id="name" name="name" placeholder="Untitled {{type}}" value="{{name}}">
+      <input type="text" id="fileNameField" name="name" placeholder="Untitled {{type}}" value="{{name}}">
       <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn btn-success">Save</button>
@@ -14,7 +14,9 @@
     <fieldset>
       <legend>Set A Thumbnail</legend>
       {{#if thumbnailS3key}}
-        <img src="{{thumbnailUrl}}" class="thumbHolder" alt="{{name}} Thumbnail" />
+        <p>
+          <img src="{{thumbnailUrl}}" class="thumbHolder img-polaroid" alt="{{name}} Thumbnail" />
+        </p>
       {{else}}
         <div class="alert alert-warning">
           <big>No thumbnail yet! Select or upload one.</big>
@@ -23,9 +25,9 @@
       <div class="control-group">
         <div class="controls">
           {{#if isImage}}
-            <a href="#" class="btn btn-info crop">Use Original</a>
+            <a id="useOriginalButton" href="#" class="btn btn-info crop">Use Original</a>
           {{/if}}
-          <a href="#" class="btn btn-success upload">Upload Thumbnail</a>
+          <a id="useCustomButton" href="#" class="btn btn-success upload">Upload Thumbnail</a>
         </div>
       </div>
       <input type="hidden" id="thumbnail" name="thumbnail" value="{{thumbnail}}">

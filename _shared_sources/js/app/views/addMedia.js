@@ -1,7 +1,14 @@
 Website.Views.AddMedia = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._addMedia;
+    
     if(options.page) {
       this.page = options.page;
+    }
+    
+    if(this.page.media) {
+      this.listenTo(this.page.media,'change add remove',this.render,this);
+      this.page.media.fetch();
     }
     
     this.listenTo(this.page,'change',this.render,this);
@@ -10,19 +17,17 @@ Website.Views.AddMedia = BaseView.extend({
     'click a.filepicker':'startFilepicker'
   },
   render: function() {
-    var self = this;
+    this.$el.html(this.template(
+      _.extend(_.clone(Website.userVars),{
+        page: this.page.attributes
+      })
+    ));
     
-    Website.loadTemplate(self, 'partials/addMedia', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          page: self.page.attributes
-        })
-      ));
-      
-      self.$('.tooltip-trigger').tooltip();
-    });
+    self.$('.tooltip-trigger').tooltip();
     
-    return self;
+    Website.loadGuider();
+    
+    return this;
   },
   //Tries to delete the page
   startFilepicker: function(e, debug_cb) {
@@ -31,6 +36,16 @@ Website.Views.AddMedia = BaseView.extend({
       e.stopPropagation();
     }
     
-    this.page.addMedia(debug_cb);
+    Website.hideGuiders();
+    
+    this.page.addMedia(function(err, FPFiles) {
+      if(err && err.code!==101) {
+        Website.error(err);
+      }
+      else if(FPFiles) {
+        Website.setFlash(FPFiles.length + " files uploaded!","success");
+      }
+      Website.loadGuider();
+    },debug_cb);
   }
 });

@@ -1,5 +1,7 @@
 Website.Views.ReviewList = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._reviewList;
+    
     //Fetch the page
     if(options.unprocessed) {
       this.unprocessed = options.unprocessed;
@@ -8,8 +10,6 @@ Website.Views.ReviewList = BaseView.extend({
     this.listenTo(this.unprocessed,'change add remove',this.render,this);
   },
   render: function() {
-    var self = this;
-    
     var unprocessedAttrs = [];
     
     this.unprocessed.forEach(function(model) {
@@ -18,14 +18,12 @@ Website.Views.ReviewList = BaseView.extend({
       unprocessedAttrs.push(attrs);
     });
     
-    Website.loadTemplate(self, 'partials/reviewList', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          unprocessed:unprocessedAttrs
-        })
-      ));
-    });
+    this.$el.html(this.template(
+      _.extend(_.clone(Website.userVars),{
+        unprocessed:unprocessedAttrs
+      })
+    ));
     
-    return self;
+    return this;
   }
 });

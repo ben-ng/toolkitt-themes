@@ -1,5 +1,7 @@
 Website.Views.EditMedia = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._editMedia;
+    
     if(options.media) {
       this.media = options.media;
     }
@@ -15,8 +17,7 @@ Website.Views.EditMedia = BaseView.extend({
     'click a.crop':'performCrop'
   },
   render: function() {
-    var self = this;
-    var attrs = _.clone(self.media.attributes);
+    var attrs = _.clone(this.media.attributes);
     attrs.url = Website.s3prefix + attrs.s3key;
       
     if(attrs.thumbnailS3key) {
@@ -30,23 +31,21 @@ Website.Views.EditMedia = BaseView.extend({
     attrs.isImage = attrs.type === 'image';
     attrs.isVideo = attrs.type === 'video';
     
-    Website.loadTemplate(self, 'partials/editMedia', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          media: attrs
-        })
-      ));
-      
-      //Focus on name input if it's empty
-      var inputElem = self.$('input[name=name]');
-      if(inputElem.val().replace(/]w/, '') == '') {
-        inputElem.val('').focus();
-      }
-      
-      Holder.run();
-    });
+    this.$el.html(this.template(
+      _.extend(_.clone(Website.userVars),{
+        media: attrs
+      })
+    ));
     
-    return self;
+    //Focus on name input if it's empty
+    var inputElem = this.$('input[name=name]');
+    if(inputElem.val().replace(/]w/, '') == '') {
+      inputElem.val('').focus();
+    }
+    
+    Holder.run();
+    
+    return this;
   },
   //Tries to save the edited media
   performSave: function(e) {

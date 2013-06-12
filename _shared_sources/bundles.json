@@ -4,6 +4,8 @@
     "js/lib/holder.js",
     "js/lib/modernizr.custom.17475.js",
     "js/lib/jquery.js",
+    "js/lib/jquery.cookie.js",
+    "js/lib/guiders.js",
     "js/lib/jquery.sortable.js",
     "js/lib/jquery.elastislide.js",
     "js/lib/jquery.mousewheel.js",
@@ -25,6 +27,7 @@
     "js/lib/underscore.js",
     "js/lib/backbone.js",
     "js/app/CORSsync.js",
+    "js/app/collections/base.js",
     "js/app/models/base.js",
     "js/app/views/base.js",
     "js/app/website.js",
@@ -51,6 +54,11 @@
     "js/app/views/mediaGrid.js",
     "js/app/router/base.js",
     "js/app/router/router.js",
+    "js/app/guiders/index.js",
+    {
+      "dir":"js/app/templates",
+      "type":"handlebars"
+    },
     "js/app/init.js"
   ],
   "js/tests.js": [
@@ -73,6 +81,7 @@
     "css/bootstrap.css",
     "css/bootstrap-responsive.css",
     "less/flat-ui.less",
-    "css/qunit.css"
+    "css/qunit.css",
+    "css/guiders.css"
   ]
 }

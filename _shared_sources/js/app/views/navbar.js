@@ -1,5 +1,7 @@
 Website.Views.Navbar = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._navbar;
+    
     if(options.pages) {
       this.pages = options.pages;
     }
@@ -11,8 +13,7 @@ Website.Views.Navbar = BaseView.extend({
     this.listenTo(Website.user, 'change', this.render,this);
     this.listenTo(Website.Router, 'all', this.render, this)
   },
-  render: function() {  
-    var self = this;
+  render: function() {
     var addMediaHref = null;
     var editPageHref = null;
     var modelAttrs = [];
@@ -43,26 +44,25 @@ Website.Views.Navbar = BaseView.extend({
     var unprocessedCount = this.unprocessed.length;
     var unprocessedPrompt = this.unprocessed.length + " upload" + (this.unprocessed.length===1?"":"s") + " need" + (this.unprocessed.length!==1?"":"s") + " review";
     
-    Website.loadTemplate(this,'partials/navbar',function(err) {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          pages:modelAttrs,
-          editPageHref:editPageHref,
-          addMediaHref:addMediaHref,
-          createHref:'/createPage',
-          reviewHref:'/reviewPage',
-          isHome:Backbone.history.fragment === '',
-          isPage:Backbone.history.fragment.match(/^(edit)?[pP]age\//)?true:false,
-          isEditingPage:Backbone.history.fragment.match(/^page\/[a-zA-Z0-9\-]+\/edit$/)?true:false,
-          isAddingMedia:Backbone.history.fragment.match(/^page\/[a-zA-Z0-9\-]+\/addMedia$/)?true:false,
-          isEditingMedia:Backbone.history.fragment.match(/^media\/(image|video)\/[a-zA-Z0-9\-]+\/edit$/)?true:false,
-          isCreatingPage:Backbone.history.fragment.match(/^createPage/)?true:false,
-          isReviewingUploads:Backbone.history.fragment.match(/^review/)?true:false,
-          unprocessedCount:unprocessedCount,
-          unprocessedPrompt:unprocessedPrompt
-        })
-      ));
-    });
-    return self;
+    this.$el.html(this.template(
+      _.extend(_.clone(Website.userVars),{
+        pages:modelAttrs,
+        editPageHref:editPageHref,
+        addMediaHref:addMediaHref,
+        createHref:'/createPage',
+        reviewHref:'/reviewPage',
+        isHome:Backbone.history.fragment === '',
+        isPage:Backbone.history.fragment.match(/^(edit)?[pP]age\//)?true:false,
+        isEditingPage:Backbone.history.fragment.match(/^page\/[a-zA-Z0-9\-]+\/edit$/)?true:false,
+        isAddingMedia:Backbone.history.fragment.match(/^page\/[a-zA-Z0-9\-]+\/addMedia$/)?true:false,
+        isEditingMedia:Backbone.history.fragment.match(/^media\/(image|video)\/[a-zA-Z0-9\-]+\/edit$/)?true:false,
+        isCreatingPage:Backbone.history.fragment.match(/^createPage/)?true:false,
+        isReviewingUploads:Backbone.history.fragment.match(/^review/)?true:false,
+        unprocessedCount:unprocessedCount,
+        unprocessedPrompt:unprocessedPrompt
+      })
+    ));
+    
+    return this;
   }
 });

@@ -1,5 +1,7 @@
 Website.Views.Login = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._login;
+    
     if(options.user) {
       this.user = options.user;
     }
@@ -14,19 +16,15 @@ Website.Views.Login = BaseView.extend({
     'submit':'login'
   },
   render: function() {
-    var self = this;
-    
-    Website.loadTemplate(self, 'partials/login', function() {
-      //Update the isLoggedIn template variable
-      Website.userVars = _.extend(Website.userVars,{
-        isLoggedIn: Website.isLoggedIn(),
-        user: self.user.attributes
-      });
-      
-      self.$el.html(self.template(Website.userVars));
+    //Update the isLoggedIn template variable
+    Website.userVars = _.extend(Website.userVars,{
+      isLoggedIn: Website.isLoggedIn(),
+      user: this.user.attributes
     });
     
-    return self;
+    this.$el.html(this.template(Website.userVars));
+    
+    return this;
   },
   //Tries to log the user in
   login: function(e) {

@@ -1,5 +1,7 @@
 Website.Views.MediaGrid = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._mediaGrid;
+    
     //Fetch the page
     if(options.page) {
       this.page = options.page;
@@ -9,7 +11,7 @@ Website.Views.MediaGrid = BaseView.extend({
         this.page.media.fetch();
       }
       else {
-        this.page.media = new Website.Collections.PageMedia({
+        this.page.media = new Website.Collections.PageMedia([], {
           page: this.page
         });
       }
@@ -18,16 +20,14 @@ Website.Views.MediaGrid = BaseView.extend({
       this.page = new Website.Models.Page({
         name:'Page not found'
       });
-      this.page.media = new Website.Collections.PageMedia();
+      this.page.media = new Website.Collections.PageMedia([]);
     }
   },
   render: function() {
-    var self = this;
-    
     var media = [];
-    var safeName = encodeURIComponent(self.page.attributes.name);
+    var safeName = encodeURIComponent(this.page.attributes.name);
     
-    self.page.media.forEach(function(model) {
+    this.page.media.forEach(function(model) {
       var attrs = _.clone(model.attributes);
       attrs.url = Website.s3prefix + attrs.s3key;
       attrs.playerUrl = 'page/'+safeName+'/'+attrs.type+'/'+attrs.id;
@@ -49,17 +49,18 @@ Website.Views.MediaGrid = BaseView.extend({
       media.push(attrs);
     });
     
-    Website.loadTemplate(self, 'partials/mediaGrid', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          media:media,
-          page:self.page.attributes
-        })
-      ));
-      
-      //Create any placeholders
-      Holder.run();
-    });
+    this.$el.html(this.template(
+      _.extend(_.clone(Website.userVars),{
+        media:media,
+        page:this.page.attributes
+      })
+    ));
+    
+    //Create any placeholders
+    Holder.run();
+    
+    //Set any guiders
+    Website.loadGuider();
     
     return self;
   }

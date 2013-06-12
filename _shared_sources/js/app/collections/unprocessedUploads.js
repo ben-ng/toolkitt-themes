@@ -1,4 +1,4 @@
-Website.Collections.UnprocessedUploads = Backbone.Collection.extend({
+Website.Collections.UnprocessedUploads = BaseCollection.extend({
   name:'media',
   url: TK.baseURL+'/unprocessed.json',
   model: function(attrs, options) {

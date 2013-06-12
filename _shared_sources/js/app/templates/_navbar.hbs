@@ -1,5 +1,5 @@
 <div class="centered-boxes">
-  <ul class="nav nav-boxes">
+  <ul id="mainnav" class="nav nav-boxes">
     {{#if isHome}}
       <li><a href="/" class="current app">{{sitetitle.value}}</a></li>
     {{else}}
@@ -19,9 +19,9 @@
   <ul class="nav nav-boxes actionable">
     {{#if isPage}}
       {{#if isAddingMedia}}
-        <li><a href="{{addMediaHref}}" class="current app">Add Media</a></li>
+        <li><a href="{{addMediaHref}}" id="addMediaLink" class="current app">Add Media</a></li>
       {{else}}
-        <li><a href="{{addMediaHref}}" class="app">Add Media</a></li>
+        <li><a href="{{addMediaHref}}" id="addMediaLink" class="app">Add Media</a></li>
       {{/if}}
       {{#if isEditingPage}}
         <li><a href="{{editPageHref}}" class="current app">Edit Page</a></li>
@@ -30,9 +30,9 @@
       {{/if}}
     {{/if}}
     {{#if isCreatingPage}}
-      <li><a href="{{createHref}}" class="current app">New Page</a></li>
+      <li><a href="{{createHref}}" id="newPageLink" class="current app">New Page</a></li>
     {{else}}
-      <li><a href="{{createHref}}" class="app">New Page</a></li>
+      <li><a href="{{createHref}}" id="newPageLink" class="app">New Page</a></li>
     {{/if}}
     {{#if isReviewingUploads}}
       <li><a href="{{reviewHref}}" class="current app">Review</a></li>

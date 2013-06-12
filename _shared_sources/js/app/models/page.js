@@ -11,6 +11,8 @@ Website.Models.Page = BaseModel.extend({
     if(opts.name) {
       this.set("name",opts.name);
     }
+    
+    this.media = new Website.Collections.PageMedia([],{page:this});
   },
   validate: function(attrs,options) {
     var errors = [];
@@ -51,8 +53,8 @@ Website.Models.Page = BaseModel.extend({
       delete data.itemList;
     }
     //Set the page media collection if needed
-    if(!this.media) {
-      this.media = new Website.Collections.PageMedia({page:this});
+    if(!this.media || !this.media.page.id) {
+      this.media = new Website.Collections.PageMedia([],{page:this});
       this.media.fetch();
     }
     else {
@@ -60,7 +62,7 @@ Website.Models.Page = BaseModel.extend({
     }
     return data;
   },
-  addMedia: function(debug_cb) {
+  addMedia: function(cb, debug_cb) {
     var self = this;
     
     filepicker.pickAndStore({
@@ -98,8 +100,9 @@ Website.Models.Page = BaseModel.extend({
             success:function() {
               Website.unprocessed.fetch();
               after_save_cb();
+              cb(null, FPFiles);
             },
-            error: Website.handleError
+            error: cb
           });
         }
       };
@@ -153,7 +156,7 @@ Website.Models.Page = BaseModel.extend({
       }
     },
     function(FPError) {
-      Website.error(FPError);
+      cb(FPError);
     });
   }
 });

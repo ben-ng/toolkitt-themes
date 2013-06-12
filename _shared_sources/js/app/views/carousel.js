@@ -1,5 +1,7 @@
 Website.Views.Carousel = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._carousel;
+    
     //Fetch the page
     if(options.page) {
       this.page = options.page;
@@ -70,21 +72,19 @@ Website.Views.Carousel = BaseView.extend({
       media.push(attrs);
     });
     
-    Website.loadTemplate(self, 'partials/carousel', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          media:media,
-          page:self.page.attributes
-        })
-      ));
-      
-      //Activate carousel
-      self.$('.carousel').elastislide();
-      
-      Holder.run();
-      
-      self.toggleReel(null,false);
-    });
+    self.$el.html(self.template(
+      _.extend(_.clone(Website.userVars),{
+        media:media,
+        page:self.page.attributes
+      })
+    ));
+    
+    //Activate carousel
+    self.$('.carousel').elastislide();
+    
+    Holder.run();
+    
+    self.toggleReel(null,false);
     
     return self;
   }

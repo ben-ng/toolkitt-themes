@@ -1,5 +1,7 @@
 Website.Views.EditPage = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._editPage;
+    
     if(options.page) {
       this.page = options.page;
     }
@@ -40,26 +42,24 @@ Website.Views.EditPage = BaseView.extend({
       media.push(attrs);
     });
     
-    Website.loadTemplate(self, 'partials/editPage', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          page: self.page.attributes,
-          media: media
-        })
-      ));
-      
-      //Focus on name input if it's empty
-      var inputElem = self.$('input[name=name]');
-      if(inputElem.val().replace(/]w/, '') == '') {
-        inputElem.val('').focus();
-      }
-      
-      self.$('.sortable').sortable().bind('sortupdate', function() {
-        self.readSortOrder.apply(self,arguments);
-      });
-      
-      Holder.run();
+    self.$el.html(self.template(
+      _.extend(_.clone(Website.userVars),{
+        page: self.page.attributes,
+        media: media
+      })
+    ));
+    
+    //Focus on name input if it's empty
+    var inputElem = self.$('input[name=name]');
+    if(inputElem.val().replace(/]w/, '') == '') {
+      inputElem.val('').focus();
+    }
+    
+    self.$('.sortable').sortable().bind('sortupdate', function() {
+      self.readSortOrder.apply(self,arguments);
     });
+    
+    Holder.run();
     
     return self;
   },

@@ -1,4 +1,4 @@
-Website.Collections.Pages = Backbone.Collection.extend({
+Website.Collections.Pages = BaseCollection.extend({
   name:'page',
   url: TK.baseURL+'/pages.json',
   model: Website.Models.Page,

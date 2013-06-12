@@ -1,5 +1,7 @@
 Website.Views.CreatePage = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._createPage;
+    
     //Initialize an empty user
     this.model = new Website.Models.Page({name:''});
     
@@ -13,23 +15,19 @@ Website.Views.CreatePage = BaseView.extend({
     'submit':'performSave'
   },
   render: function() {
-    var self = this;
+    this.$el.html(this.template(
+      _.extend(_.clone(Website.userVars),{
+        page: this.model.attributes
+      })
+    ));
     
-    Website.loadTemplate(self, 'partials/createPage', function() {
-      self.$el.html(self.template(
-        _.extend(_.clone(Website.userVars),{
-          page: self.model.attributes
-        })
-      ));
-      
-      //Focus on name input if it's empty
-      var inputElem = self.$('input[name=name]');
-      if(inputElem.val().replace(/]w/, '') == '') {
-        inputElem.val('').focus();
-      }
-    });
+    //Focus on name input if it's empty
+    var inputElem = this.$('input[name=name]');
+    if(inputElem.val().replace(/]w/, '') == '') {
+      inputElem.val('').focus();
+    }
     
-    return self;
+    return this;
   },
   //Tries to log the user in
   performSave: function(e) {

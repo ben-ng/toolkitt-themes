@@ -1,9 +1,10 @@
-Website.Collections.PageMedia = Backbone.Collection.extend({
+Website.Collections.PageMedia = BaseCollection.extend({
   name:'media',
-  initialize: function(opts) {
-    if(opts.page) {
+  initialize: function(models, opts) {
+    if(opts && opts.page) {
       this.page = opts.page;
     }
+    this.models = models;
   },
   url: function() {
     return TK.baseURL+'/pages/'+this.page.attributes.id+'/media.json'

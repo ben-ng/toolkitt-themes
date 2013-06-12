@@ -1,5 +1,7 @@
 Website.Views.Header = BaseView.extend({
   initialize: function(options) {
+    this.template = window.JST._header;
+    
     if(options.title) {
       this.title = options.title;
     }
@@ -17,26 +19,22 @@ Website.Views.Header = BaseView.extend({
     Website.clearFlash();
     this.render();
   },
-  render: function() {  
-    var self = this;
-    Website.loadTemplate(this,'partials/header',function(err) {
-      self.$el.html(self.template(_.extend(
-        _.clone(Website.userVars), {
-          pageTitle: self.title,
-          flash: Website.flash && Website.flash.message,
-          flashType: Website.flash && Website.flash.type
-        }
-      )));
-      
-      //Dim the flash view(s?)
-      var flashes = self.$(".alert");
-      flashes.each(function(index,elem) {
-        //Fade to white
-        $(elem).animate({backgroundColor:"#FFF"},1000);
-      });
-      
-      self.assign(Website.navbarView, '#navbar');
+  render: function() {
+    this.$el.html(this.template(_.extend(
+      _.clone(Website.userVars), {
+        pageTitle: this.title,
+        flash: Website.flash && Website.flash.message,
+        flashType: Website.flash && Website.flash.type
+      }
+    )));
+    
+    //Dim the flash view(s?)
+    var flashes = this.$(".alert");
+    flashes.each(function(index,elem) {
+      //Fade to white
+      $(elem).animate({backgroundColor:"#FFF"},1000);
     });
-    return self;
+    
+    this.assign(Website.navbarView, '#navbar');
   }
 });
