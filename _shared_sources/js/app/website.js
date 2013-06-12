@@ -152,6 +152,11 @@ var Website = new (BaseView.extend({
     this.pages = new Website.Collections.Pages();
     this.unprocessed = new Website.Collections.UnprocessedUploads();
     
+    //We want to update the unprocessed items when the user is logged in or out
+    this.listenTo(this.user,"change",function() {
+      this.unprocessed.fetch({success:doneFetch,error:self.handleError});
+    },this);
+    
     //The page will have to be rendered if any of these change
     /*
     var forceUpdate = function() {
