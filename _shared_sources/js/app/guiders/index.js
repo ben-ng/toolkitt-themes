@@ -45,7 +45,7 @@ guiders.createGuider({
 guiders.createGuider({
   id: "reviewFile",
   attachTo: "#firstFixButton",
-  position: 3,
+  position: 6,
   overlay: false,
   title: "Fix This File",
   description: "Click this button to add a thumbnail"
