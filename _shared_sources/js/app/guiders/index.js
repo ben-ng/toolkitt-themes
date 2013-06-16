@@ -66,7 +66,17 @@ guiders.createGuider({
   position: 3,
   overlay: true,
   title: "The One-Click Fix",
-  description: "Click this button to use the original image as your thumbnail."
+  description: "Click this button to use the original image as your thumbnail. You can do this with videos too!"
+});
+guiders.createGuider({
+  id: "captureImage",
+  buttons: [{name: "Next"}],
+  next: "thumbnailImageCustom",
+  attachTo: "#useCaptureButton",
+  position: 3,
+  overlay: true,
+  title: "The One-Click Fix",
+  description: "Use the video progress bar to find a frame you like, then click this button to use it as your thumbnail."
 });
 guiders.createGuider({
   id: "thumbnailImageCustom",

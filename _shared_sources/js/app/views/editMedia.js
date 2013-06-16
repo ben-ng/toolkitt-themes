@@ -14,7 +14,8 @@ Website.Views.EditMedia = BaseView.extend({
     'submit':'performSave',
     'click a.btn-danger':'performDelete',
     'click a.upload':'performPick',
-    'click a.crop':'performCrop'
+    'click a.crop':'performCrop',
+    'click a.capture':'performCapture'
   },
   render: function() {
     var attrs = _.clone(this.media.attributes);
@@ -38,6 +39,7 @@ Website.Views.EditMedia = BaseView.extend({
     
     attrs.isImage = attrs.type === 'image';
     attrs.isVideo = attrs.type === 'video';
+    attrs.attributeList = attrs.attribs.join(',');
     
     this.$el.html(this.template(
       _.extend(_.clone(Website.userVars),{
@@ -51,7 +53,11 @@ Website.Views.EditMedia = BaseView.extend({
       inputElem.val('').focus();
     }
     
-    Holder.run();
+    //Activate the tags input
+    this.$("input[name=attribs]").tagsInput();
+    
+    //Activate the tooltip
+    this.$("label span").popover({placement:'right', trigger:'hover', html:true});
     
     //Only show this guider once
     if(ready) {
@@ -65,11 +71,13 @@ Website.Views.EditMedia = BaseView.extend({
           Website.loadGuider("thumbnailImage");
         }
         else {
-          Website.loadGuider("thumbnailImageCustom");
+          Website.loadGuider("captureImage");
         }
         return true;
       }
     }
+    
+    Holder.run();
     
     return this;
   },
@@ -80,10 +88,12 @@ Website.Views.EditMedia = BaseView.extend({
     e.preventDefault();
     
     var name = this.$('input[name=name]').val();
+    var attribs = this.$('input[name=attribs]').val().split(",");
     
     this.media.save({
       userId:Website.user.attributes.id,
-      name:name
+      name:name,
+      attribs:attribs
     }, {
       success:function() {
         Website.unprocessed.fetch({
@@ -142,5 +152,39 @@ Website.Views.EditMedia = BaseView.extend({
     e.stopPropagation();
     
     this.media.cropThumbnail();
+  },
+  //Tries to capture a frame from the video
+  performCapture: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    //Tries to find a usable video element on the page
+    var self = this
+      , player = vjs(Website.videoPlayerId)
+      , video = (player ? player.tag : null)
+      , opts = {
+          origWidth: player.width()
+        , origHeight: player.height()
+        }
+      , resizeOpts = {
+          origWidth: player.width()
+        , origHeight: player.height()
+        , maxWidth: Website.thumbnailDims.width
+        , maxHeight: Website.thumbnailDims.height
+        };
+    
+    if(!video || !opts.origWidth || !opts.origHeight) {
+      Website.error("Video not yet loaded, wait a few seconds and try again.");
+    }
+    else {
+      var thumber = new jsthumb();
+      
+      var fullsize = thumber.screenshot(video, opts);
+      thumber.resizeData(fullsize, resizeOpts, function(err, data) {
+        //Strip junk from data
+        data = data.substring(data.indexOf(",")+1);
+        self.media.useThumbnail(data);
+      });
+    }
   }
 });

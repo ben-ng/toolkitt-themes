@@ -17,6 +17,7 @@ var Website = new (BaseView.extend({
   thumbnailDims: {width:340,height:192},
   flashMessage:null,
   s3prefix:'http://toolkitt.s3.amazonaws.com/',
+  videoPlayerId:"media_video",
   /*
   * Creates a holder.js URL to use as a placeholder thumbnail
   */

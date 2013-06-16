@@ -2,6 +2,7 @@
   "js/scripts.js": [
     "js/lib/video.js",
     "js/lib/holder.js",
+    "js/lib/js-thumb.js",
     "js/lib/modernizr.custom.17475.js",
     "js/lib/jquery.js",
     "js/lib/jquery.cookie.js",

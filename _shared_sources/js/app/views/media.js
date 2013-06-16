@@ -10,10 +10,24 @@ Website.Views.Media = BaseView.extend({
     this.listenTo(this.media,'change',this.render,this);
   },
   render: function() {
-    var attrs = _.clone(this.media.attributes);
+    var attrs = _.clone(this.media.attributes)
+      , waitFor = 2
+      , videoDims = {}
+      , afterVideoLoad = function(e) {
+          waitFor--;
+          
+          //Metadata Loaded Callback
+          if(e) {
+            videoDims = {height:this.videoHeight, width:this.videoWidth};
+          }
+          
+          if(waitFor === 0) {
+            vjs(Website.videoPlayerId).width(videoDims.width).height(videoDims.height);
+          }
+        };
     
     if(attrs.s3key) {
-      attrs.url = Website.s3prefix + attrs.s3key;
+      attrs.url = attrs.s3key;
     }
     else {
       attrs.thumbnailUrl = Website.placeholderThumbnail();
@@ -32,9 +46,19 @@ Website.Views.Media = BaseView.extend({
     
     this.$el.html(this.template(
       _.extend(_.clone(Website.userVars),{
-        media:attrs,
+        media:attrs
       })
     ));
+    
+    //Initialize VJS
+    if(attrs.isVideo) {
+      //Reset players object, otherwise it won't be initialized properly by VJS
+      vjs.players = {};
+      vjs(Website.videoPlayerId,{},afterVideoLoad);
+      this.$el.find("video").on('loadedmetadata', afterVideoLoad);
+    }
+    
+    Holder.run();
     
     return this;
   }

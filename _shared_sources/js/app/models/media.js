@@ -161,6 +161,37 @@ Website.Models.Media = BaseModel.extend({
       }
     );
   },
+  useThumbnail: function(base64Data) {
+    var self = this;
+    
+    Website.setFlash("Please wait while we process the image...","info");
+    
+    filepicker.store(base64Data,
+      //Convert options
+      {
+        signature:Website.user.attributes.signature,
+        policy:Website.user.attributes.policy,
+        mimetype:'image/png',
+        base64decode: true,
+        path:Website.user.attributes.path,
+        location:'s3',
+        access:'public'
+      },
+      function(FPFileThumb) {
+        //Set s3key to null to force a re-stat
+        self.save({thumbnailFpkey:FPFileThumb.url, thumbnailS3key:null},{
+          success:function() {
+            Website.setFlash("Thumbnail Saved!", "success");
+            Website.unprocessed.fetch();
+          },
+          error: Website.handleError
+        });
+      },
+      function(FPError) {
+        Website.error(FPError);
+      }
+    );
+  },
   fpfile: function() {
     return {
       url:this.attributes.fpkey,
