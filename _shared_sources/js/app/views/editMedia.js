@@ -151,7 +151,24 @@ Website.Views.EditMedia = BaseView.extend({
     e.preventDefault();
     e.stopPropagation();
     
-    this.media.cropThumbnail();
+    //Tries to find a usable video element on the page
+    var self = this
+      , image = $("#"+Website.imageViewerId)[0]
+      , opts = {
+          origWidth: image.width
+        , origHeight: image.height
+        , maxWidth: Website.thumbnailDims.width
+        , maxHeight: Website.thumbnailDims.height
+        };
+    
+    if(!image || !opts.origWidth || !opts.origHeight) {
+      Website.error("Image not yet loaded, wait a few seconds and try again.");
+    }
+    else {
+      var data = jsthumb.resize(image, opts);
+      
+      self.media.useThumbnail(data.substring(data.indexOf(",")+1));
+    }
   },
   //Tries to capture a frame from the video
   performCapture: function(e) {
@@ -177,10 +194,8 @@ Website.Views.EditMedia = BaseView.extend({
       Website.error("Video not yet loaded, wait a few seconds and try again.");
     }
     else {
-      var thumber = new jsthumb();
-      
-      var fullsize = thumber.screenshot(video, opts);
-      thumber.resizeData(fullsize, resizeOpts, function(err, data) {
+      var fullsize = jsthumb.screenshot(video, opts);
+      jsthumb.resizeData(fullsize, resizeOpts, function(err, data) {
         //Strip junk from data
         data = data.substring(data.indexOf(",")+1);
         self.media.useThumbnail(data);
