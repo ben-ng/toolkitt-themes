@@ -205,5 +205,28 @@ Website.Models.Media = BaseModel.extend({
     return {
       url:this.attributes.thumbnailFpkey
     };
+  },
+  templateVars: function () {
+    var attrs = _.clone(this.attributes);
+    
+    if(attrs.s3key) {
+      attrs.url = Website.s3prefix + attrs.s3key;
+    }
+    else {
+      attrs.thumbnailUrl = Website.placeholderThumbnail();
+    }
+      
+    if(attrs.thumbnailS3key) {
+      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
+    }
+    else {
+      //Halfsized with the true option
+      attrs.thumbnailUrl = Website.placeholderThumbnail();
+    }
+    
+    attrs.isImage = attrs.type === 'image';
+    attrs.isVideo = attrs.type === 'video';
+    
+    return attrs;
   }
 });

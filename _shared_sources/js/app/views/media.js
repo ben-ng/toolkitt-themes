@@ -10,7 +10,7 @@ Website.Views.Media = BaseView.extend({
     this.listenTo(this.media,'change',this.render,this);
   },
   render: function() {
-    var attrs = _.clone(this.media.attributes)
+    var attrs = this.media.templateVars()
       , waitFor = 2
       , videoDims = {}
       , afterVideoLoad = function(e) {
@@ -25,24 +25,6 @@ Website.Views.Media = BaseView.extend({
             vjs(Website.videoPlayerId).width(videoDims.width).height(videoDims.height);
           }
         };
-    
-    if(attrs.s3key) {
-      attrs.url = Website.s3prefix + attrs.s3key;
-    }
-    else {
-      attrs.thumbnailUrl = Website.placeholderThumbnail();
-    }
-      
-    if(attrs.thumbnailS3key) {
-      attrs.thumbnailUrl = Website.s3prefix + attrs.thumbnailS3key;
-    }
-    else {
-      //Halfsized with the true option
-      attrs.thumbnailUrl = Website.placeholderThumbnail();
-    }
-    
-    attrs.isImage = attrs.type === 'image';
-    attrs.isVideo = attrs.type === 'video';
     
     this.$el.html(this.template(
       _.extend(_.clone(Website.userVars),{

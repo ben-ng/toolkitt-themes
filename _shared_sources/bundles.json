@@ -1,5 +1,6 @@
 {
   "js/scripts.js": [
+    "js/lib/messenger.js",
     "js/lib/video.js",
     "js/lib/holder.js",
     "js/lib/modernizr.custom.17475.js",
@@ -51,6 +52,7 @@
     "js/app/views/addMedia.js",
     "js/app/views/editMedia.js",
     "js/app/views/media.js",
+    "js/app/views/thumbnail.js",
     "js/app/views/mediaGrid.js",
     "js/app/router/base.js",
     "js/app/router/router.js",

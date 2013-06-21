@@ -16,7 +16,8 @@ var Website = new (BaseView.extend({
   imageExts: ['.gif', '.png', '.jpeg', '.jpg', '.bmp'],
   thumbnailDims: {width:340,height:192},
   flashMessage:null,
-  s3prefix:'http://toolkitt.s3.amazonaws.com/',
+  s3prefix:'https://toolkitt.s3.amazonaws.com/',
+  thumberUrl:'https://toolkitt.s3.amazonaws.com/thumber.html',
   videoPlayerId:"media_video",
   imageViewerId:"media_image",
   /*
@@ -83,6 +84,32 @@ var Website = new (BaseView.extend({
     ucfirst:function(str) {
       var s = str.charAt(0).toUpperCase();
       return s + str.substr(1);
+    },
+    uuid:function(length) {
+      var possible = "abcdefghijklmnopqrstuvwxyz"
+        , length = length || 10
+        , id
+        , output = [];
+  
+      for( i=0; i < length; i++ ) {
+        output.push(possible.charAt(Math.floor(Math.random() * possible.length)));
+      }
+      
+      return output.join('');
+    },
+    mime:function(filename) {
+      var ext = '.' + filename.split('.').pop();
+      
+      if(ext === 'jpg') {
+        ext = 'jpeg';
+      }
+      
+      if(this.util.isVideo(filename)) {
+        return 'video/'+ext;
+      }
+      else {
+        return 'image/'+ext;
+      }
     }
   },
   /*
@@ -149,6 +176,8 @@ var Website = new (BaseView.extend({
     this.listenTo(this.pages,'change add remove',forceUpdate,this);
     this.listenTo(this.unprocessed,'change add remove',forceUpdate,this);
     */
+    
+    this.messenger = new Messenger(null, this.s3prefix, "thumbnailer")
     
     //Flash functions
     this.setFlash = function(message,type) {
@@ -337,14 +366,14 @@ var Website = new (BaseView.extend({
       media:media
     });
     
-    var mediaPreview = new Website.Views.Media({
+    var thumbnailer = new Website.Views.Thumbnail({
       media:media
     });
     
     this.performAction('editMedia',function() {
         this.assign(this.headerView, '#header');
         this.assign(editForm, '#editForm');
-        this.assign(mediaPreview, '#preview');
+        this.assign(thumbnailer, '#preview');
         this.assign(this.footerView, '#footer');
     });
   },
