@@ -27,7 +27,7 @@ Website.Views.Media = BaseView.extend({
         };
     
     if(attrs.s3key) {
-      attrs.url = attrs.s3key;
+      attrs.url = Website.s3prefix + attrs.s3key;
     }
     else {
       attrs.thumbnailUrl = Website.placeholderThumbnail();
