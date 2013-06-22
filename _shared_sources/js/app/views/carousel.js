@@ -10,11 +10,38 @@ Website.Views.Carousel = BaseView.extend({
     this.reelOpen = false;
     
     this.listenTo(this.page.media,'change add remove',this.render,this);
+    this.listenTo(Website,'videoEnded',this.advance,this);
     this.page.media.fetch();
   },
   events: {
     'click a.bigClose':'exitPlayer',
     'click a.reelToggle':'toggleReel'
+  },
+  advance: function (lastMedia) {
+    //Find the media element after lastMedia
+    var self = this
+      , lastElementWasMatch = false
+      , matchedElement = null
+      , playerUrl
+      , safeName = encodeURIComponent(self.page.attributes.name);
+    
+    if(this.page && this.page.media) {
+      this.page.media.each(function (media) {
+        if(lastMedia.id === media.id) {
+          lastElementWasMatch = true;
+        }
+        if(lastElementWasMatch) {
+          matchedElement = media;
+          return false;
+        }
+      });
+      
+      if(matchedElement) {
+        playerUrl = 'page/'+safeName+'/'+matchedElement.attributes.type+'/'+matchedElement.id;
+        
+        Website.Router.navigate(playerUrl, {trigger:true});
+      }
+    }
   },
   toggleReel: function(e, toggle) {
     var self = this;

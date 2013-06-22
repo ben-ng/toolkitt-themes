@@ -10,9 +10,11 @@ Website.Views.Media = BaseView.extend({
     this.listenTo(this.media,'change',this.render,this);
   },
   render: function() {
-    var attrs = this.media.templateVars()
+    var self = this
+      , attrs = this.media.templateVars()
       , waitFor = 2
       , videoDims = {}
+      , player
       , afterVideoLoad = function(e) {
           waitFor--;
           
@@ -28,7 +30,12 @@ Website.Views.Media = BaseView.extend({
               videoDims.width = 960;
             }
             
-            vjs(Website.videoPlayerId).width(videoDims.width).height(videoDims.height);
+            player = vjs(Website.videoPlayerId);
+            player.width(videoDims.width);
+            player.height(videoDims.height);
+            player.on("ended",function () {
+              Website.trigger("videoEnded",self.media);
+            });
           }
         };
     
