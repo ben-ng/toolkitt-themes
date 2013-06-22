@@ -16,16 +16,20 @@ Website.Views.Media = BaseView.extend({
       , afterVideoLoad = function(e) {
           waitFor--;
           
-          /*
           //Metadata Loaded Callback
           if(e) {
             videoDims = {height:this.videoHeight, width:this.videoWidth};
           }
           
           if(waitFor === 0) {
+            //Limit to 960x540
+            if(videoDims.width>960) {
+              videoDims.height = videoDims.height * (960 / videoDims.width);
+              videoDims.width = 960;
+            }
+            
             vjs(Website.videoPlayerId).width(videoDims.width).height(videoDims.height);
           }
-          */
         };
     
     this.$el.html(this.template(
@@ -38,7 +42,7 @@ Website.Views.Media = BaseView.extend({
     if(attrs.isVideo) {
       //Reset players object, otherwise it won't be initialized properly by VJS
       vjs.players = {};
-      vjs(Website.videoPlayerId,{width:960, height:540},afterVideoLoad);
+      vjs(Website.videoPlayerId,{autoplay:true, preload:true},afterVideoLoad);
       this.$el.find("video").on('loadedmetadata', afterVideoLoad);
     }
     
