@@ -98,7 +98,7 @@ var Website = new (BaseView.extend({
       return output.join('');
     },
     mime:function(filename) {
-      var ext = '.' + filename.split('.').pop();
+      var ext = '.' + filename.split('.').pop().toLowerCase();
       
       if(ext === 'jpg') {
         ext = 'jpeg';
