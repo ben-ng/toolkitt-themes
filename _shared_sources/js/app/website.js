@@ -104,6 +104,10 @@ var Website = new (BaseView.extend({
         ext = 'jpeg';
       }
       
+      if(ext === 'mov') {
+        ext = 'mp4';
+      }
+      
       if(this.util.isVideo(filename)) {
         return 'video/'+ext;
       }
