@@ -36,7 +36,6 @@ Website.Views.Media = BaseView.extend({
             player.on("ended",function () {
               Website.trigger("videoEnded",self.media);
             });
-            
             setTimeout(function () {
               player.play();
             }, 1000);
