@@ -227,6 +227,10 @@ Website.Models.Media = BaseModel.extend({
     attrs.isImage = attrs.type === 'image';
     attrs.isVideo = attrs.type === 'video';
     
+    attrs.attribs = _.map(attrs.attribs, function (attrib) {
+      return attrib.replace(/^(.*:)/, '<strong>$1</strong>');
+    });
+    
     return attrs;
   }
 });

@@ -42,7 +42,9 @@ Website.Views.Navbar = BaseView.extend({
     
     //Count unprocessed files
     var unprocessedCount = this.unprocessed.length;
-    var unprocessedPrompt = this.unprocessed.length + " upload" + (this.unprocessed.length===1?"":"s") + " need" + (this.unprocessed.length!==1?"":"s") + " review";
+    var pluralS = (this.unprocessed.length===1?"":"s");
+    var antiPluralS = (this.unprocessed.length!==1?"":"s");
+    var unprocessedPrompt = "Choose thumbnail" + antiPluralS + " for " + this.unprocessed.length + " upload" + pluralS;
     
     this.$el.html(this.template(
       _.extend(_.clone(Website.userVars),{

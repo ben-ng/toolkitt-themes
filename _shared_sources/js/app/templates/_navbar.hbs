@@ -42,8 +42,8 @@
 {{/if}}
 {{#unless isReviewingUploads}}
   {{#if unprocessedCount}}
-  <div class="alert alert-error centered">
-    <a href="/review" class="btn btn-danger btn-wide app">{{unprocessedPrompt}}</a>
+  <div id="unprocessedPrompt" class="alert alert-info centered">
+    <a href="/review" class="btn btn-info btn-wide app">{{unprocessedPrompt}}</a>
   </div>
   {{/if}}
 {{/unless}}
