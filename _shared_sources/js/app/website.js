@@ -97,23 +97,12 @@ var Website = new (BaseView.extend({
       
       return output.join('');
     },
-    mime:function(filename) {
-      var ext = '.' + filename.split('.').pop().toLowerCase();
-      
-      if(ext === 'jpg') {
-        ext = 'jpeg';
+    mime:function(mime) {
+      if(mime === 'video/quicktime') {
+        return 'video/mp4';
       }
       
-      if(ext === 'mov') {
-        ext = 'mp4';
-      }
-      
-      if(this.util.isVideo(filename)) {
-        return 'video/'+ext;
-      }
-      else {
-        return 'image/'+ext;
-      }
+      return mime;
     }
   },
   /*

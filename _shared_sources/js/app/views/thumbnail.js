@@ -19,7 +19,7 @@ Website.Views.Thumbnail = BaseView.extend({
             sources: [
               {
                 src: attrs.url
-              , type: attrs.mimeType
+              , type: Website.util.mime(attrs.mimeType)
               }
             ]
           , attributes: {
