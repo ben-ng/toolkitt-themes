@@ -74,11 +74,11 @@ var Website = new (BaseView.extend({
   */
   util: {
     isVideo:function(filename) {
-      var ext = '.'+filename.split('.').pop();
+      var ext = '.'+filename.split('.').pop().toLowerCase();
       return Website.videoExts.indexOf(ext)>=0;
     },
     isImage:function(filename) {
-      var ext = '.'+filename.split('.').pop();
+      var ext = '.'+filename.split('.').pop().toLowerCase();
       return Website.imageExts.indexOf(ext)>=0;
     },
     ucfirst:function(str) {
