@@ -120,18 +120,11 @@ body.vjs-full-window {
   visibility: hidden;
   opacity: 0;
 
-  -webkit-transition: visibility 1.5s, opacity 1.5s;
-     -moz-transition: visibility 1.5s, opacity 1.5s;
-      -ms-transition: visibility 1.5s, opacity 1.5s;
-       -o-transition: visibility 1.5s, opacity 1.5s;
-          transition: visibility 1.5s, opacity 1.5s;
-
-  /* Wait a moment before fading out the control bar */
-  -webkit-transition-delay: 2s;
-     -moz-transition-delay: 2s;
-      -ms-transition-delay: 2s;
-       -o-transition-delay: 2s;
-          transition-delay: 2s;
+  -webkit-transition: visibility 0.1s, opacity 0.1s;
+     -moz-transition: visibility 0.1s, opacity 0.1s;
+      -ms-transition: visibility 0.1s, opacity 0.1s;
+       -o-transition: visibility 0.1s, opacity 0.1s;
+          transition: visibility 0.1s, opacity 0.1s;
 }
 /* Hide disabled or unsupported controls */
 .vjs-default-skin .vjs-hidden { display: none; }
