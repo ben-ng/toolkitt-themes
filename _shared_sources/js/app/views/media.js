@@ -16,6 +16,7 @@ Website.Views.Media = BaseView.extend({
       , afterVideoLoad = function(e) {
           waitFor--;
           
+          /*
           //Metadata Loaded Callback
           if(e) {
             videoDims = {height:this.videoHeight, width:this.videoWidth};
@@ -24,6 +25,7 @@ Website.Views.Media = BaseView.extend({
           if(waitFor === 0) {
             vjs(Website.videoPlayerId).width(videoDims.width).height(videoDims.height);
           }
+          */
         };
     
     this.$el.html(this.template(
@@ -36,7 +38,7 @@ Website.Views.Media = BaseView.extend({
     if(attrs.isVideo) {
       //Reset players object, otherwise it won't be initialized properly by VJS
       vjs.players = {};
-      vjs(Website.videoPlayerId,{},afterVideoLoad);
+      vjs(Website.videoPlayerId,{width:960, height:540},afterVideoLoad);
       this.$el.find("video").on('loadedmetadata', afterVideoLoad);
     }
     
