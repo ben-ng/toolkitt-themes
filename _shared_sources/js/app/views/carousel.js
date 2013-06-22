@@ -23,23 +23,31 @@ Website.Views.Carousel = BaseView.extend({
       , lastElementWasMatch = false
       , matchedElement = null
       , playerUrl
-      , safeName = encodeURIComponent(self.page.attributes.name);
+      , safeName = encodeURIComponent(self.page.attributes.name)
+      , i
+      , ii
+      , curModel;
     
     if(this.page && this.page.media) {
-      this.page.media.each(function (media) {
-        if(lastMedia.id === media.id) {
+      for(i=0, ii=this.page.media.models.length; i<ii; i++) {
+        curModel = this.page.media.models[i];
+        
+        if(lastMedia.id === curModel.id) {
           lastElementWasMatch = true;
+          continue;
         }
         if(lastElementWasMatch) {
-          matchedElement = media;
-          return false;
+          matchedElement = curModel;
+          break;
         }
-      });
+      }
       
       if(matchedElement) {
         playerUrl = 'page/'+safeName+'/'+matchedElement.attributes.type+'/'+matchedElement.id;
         
-        Website.Router.navigate(playerUrl, {trigger:true});
+        setTimeout(function () {
+          Website.Router.navigate(playerUrl, {trigger:true});
+        }, 1000);
       }
     }
   },

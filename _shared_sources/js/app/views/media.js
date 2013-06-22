@@ -36,6 +36,10 @@ Website.Views.Media = BaseView.extend({
             player.on("ended",function () {
               Website.trigger("videoEnded",self.media);
             });
+            
+            setTimeout(function () {
+              player.play();
+            }, 1000);
           }
         };
     
@@ -49,7 +53,7 @@ Website.Views.Media = BaseView.extend({
     if(attrs.isVideo) {
       //Reset players object, otherwise it won't be initialized properly by VJS
       vjs.players = {};
-      vjs(Website.videoPlayerId,{autoplay:true, preload:true},afterVideoLoad);
+      vjs(Website.videoPlayerId,{preload:true},afterVideoLoad);
       this.$el.find("video").on('loadedmetadata', afterVideoLoad);
     }
     
