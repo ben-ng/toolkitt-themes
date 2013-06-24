@@ -5,6 +5,7 @@ Website.Models.Page = BaseModel.extend({
     name:'Untitled',
     items:[],
     userId:'',
+    isPublished:false,
     errors:null
   },
   initialize: function(opts) {

@@ -59,6 +59,8 @@ Website.Views.EditPage = BaseView.extend({
       self.readSortOrder.apply(self,arguments);
     });
     
+    self.$(".switch").bootstrapSwitch();
+    
     Holder.run();
     
     return self;
@@ -69,11 +71,13 @@ Website.Views.EditPage = BaseView.extend({
     
     e.preventDefault();
     
-    var name = this.$('input[name=name]').val();
+    var name = this.$('input[name=name]').val()
+      , isPublished = this.$("input[name=isPublished]").parent().hasClass("switch-on");
     
     this.page.save({
       userId:Website.user.attributes.id,
-      name:name
+      name:name,
+      isPublished:isPublished
     }, {
       success:function() {
         Website.navbarView.pages.fetch({

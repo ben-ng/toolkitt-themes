@@ -10,7 +10,9 @@ Website.Views.Navbar = BaseView.extend({
     }
     this.listenTo(this.pages, 'change add remove sort',this.render,this);
     this.listenTo(this.unprocessed, 'change add remove',this.render,this);
-    this.listenTo(Website.user, 'change', this.render,this);
+    this.listenTo(Website.user, 'change', function () {
+      this.pages.fetch();
+    },this);
     this.listenTo(Website.Router, 'all', this.render, this)
   },
   render: function() {
