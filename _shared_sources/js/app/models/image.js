@@ -1,4 +1,9 @@
-Website.Models.Image = Website.Models.Media.extend({
-  name:'image',
-  urlRoot:TK.baseURL+'/images'
-});
+(function () {
+  var Media = require('./media')
+    , Image = Media.extend({
+        name:'image'
+      , urlRoot:TK.baseURL+'/images'
+      });
+  
+  module.exports = Image;
+}());
