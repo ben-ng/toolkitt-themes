@@ -2,7 +2,7 @@
   var TK = {
     userVars: "<%= encodeURIComponent(JSON.stringify(user_vars)) %>",
     debug: <%= process.env.PRODENV === 'development' ? "true" : "false" %>,
-    baseURL: "<%= geddy.config.baseURL %>",
+    baseURL: "<%= geddy.config.baseUrl %>",
     userId: "<%= user.id %>",
     filePickerKey: "<%= process.env.FILEPICKER_APIKEY %>"
   };
